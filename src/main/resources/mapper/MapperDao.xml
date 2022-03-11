@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bluemsun.dao.MapperDao">
+    <resultMap id="departmentMap" type="com.bluemsun.entity.Department">
+        <id column="id" property="departmentId"/>
+        <result column="departmentName" property="departmentName"/>
+    </resultMap>
+    <resultMap id="specialMap" type="com.bluemsun.entity.Special">
+        <id column="id" property="specialId"/>
+        <result column="departmentId" property="departmentId"/>
+        <result column="specialName" property="specialName"/>
+    </resultMap>
+    <resultMap id="imburseTypeMap" type="com.bluemsun.entity.ImburseType">
+        <result column="id" property="imburseType"/>
+        <result column="imburseTypeName" property="imburseTypeName"/>
+    </resultMap>
+    <resultMap id="goodTypeMap" type="com.bluemsun.entity.GoodsType">
+        <result column="id" property="id"/>
+        <result column="classification" property="classification"/>
+    </resultMap>
+
+    <insert id="insertGoodsType" parameterType="com.bluemsun.entity.GoodsType">
+        INSERT INTO aixin_goods_type(classification) VALUES (#{classification})
+    </insert>
+    <select id="getDepartmentMap" resultMap="departmentMap">
+        SELECT id,departmentName
+        FROM param_department
+    </select>
+    <select id="getSpecialMap" resultMap="specialMap">
+        SELECT id,departmentId,specialName
+        FROM param_special
+    </select>
+    <select id="getImburseTypeMap" resultMap="imburseTypeMap">
+        SELECT id,imburseTypeName
+        FROM param_imburseType
+    </select>
+    <select id="getGoodsTypeMap" resultMap="goodTypeMap">
+        SELECT id,classification
+        FROM aixin_goods_type
+    </select>
+    <select id="getGoodsNameMap" resultMap="com.bluemsun.dao.GoodsDao.goodsMap">
+        SELECT id,goods_name
+        FROM aixin_goods
+    </select>
+    <delete id="deleteGoodsType" parameterType="int">
+        DELETE FROM aixin_goods_type
+        WHERE id = #{id}
+    </delete>
+</mapper>

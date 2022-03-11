@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bluemsun.dao.OrderRecordDao">
+    <resultMap id="orderRecord" type="com.bluemsun.entity.OrderRecord">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="campus" property="campus"/>
+        <result column="status" property="status"/>
+        <result column="total_fuzhuang" property="totalFuzhuang"/>
+        <result column="total_riyong" property="totalRiyong"/>
+        <association property="student" javaType="com.bluemsun.entity.Student">
+            <id column="sid" property="id"/>
+            <result column="stuNum" property="stuNum"/>
+            <result column="balance_fuzhuang" property="balanceFuzhuang"/>
+            <result column="balance_riyong" property="balanceRiyong"/>
+            <result column="contact" property="contact"/>
+            <result column="departmentName" property="departmentName"/>
+            <result column="imburseTypeName" property="imburseTypeName"/>
+            <result column="grade" property="grade"/>
+            <result column="name" property="name"/>
+            <result column="specialName" property="specialName"/>
+            <result column="scampus" property="campus"/>
+        </association>
+        <collection property="orderDetailList" resultMap="orderDetail"/>
+    </resultMap>
+    <resultMap id="orderDetail" type="com.bluemsun.entity.OrderDetail">
+        <id column="did" property="id"/>
+        <result column="goods_num" property="orderNum"/>
+        <association property="goods" javaType="com.bluemsun.entity.Goods">
+            <id property="id" column="gid"/>
+            <result column="barcode" property="barcode"/>
+            <result column="goods_name" property="goodsName"/>
+            <result column="goods_type" property="goodsType"/>
+            <result column="classification" property="goodsTypeName"/>
+            <result column="images" property="images"/>
+            <result column="limit_buy_num" property="limitBuyNum"/>
+            <result column="limit_buy_type" property="limitBuyType"/>
+            <result column="money_type" property="moneyType"/>
+            <result column="price" property="price"/>
+            <result column="specs" property="specs"/>
+        </association>
+    </resultMap>
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO aixin_order_record (create_time,campus,status,total_fuzhuang,total_riyong,buyer_id)
+        VALUES (#{createTime},#{campus},#{status},#{totalFuzhuang},#{totalRiyong},#{student.id})
+    </insert>
+    <insert id="insertOrderDetailList">
+        INSERT INTO aixin_order_detail (order_id,goods_num,goods_id,create_time,student_id)
+        VALUES
+        <foreach collection="orderRecord.orderDetailList" item="item" separator=",">
+            (
+            #{orderRecord.id},
+            #{item.orderNum},
+            #{item.goods.id},
+            #{orderRecord.createTime},
+            #{orderRecord.student.id}
+            )
+        </foreach>
+    </insert>
+    <update id="updateOrderRecord">
+        UPDATE aixin_order_record
+        <set>
+            <if test="orderRecord.status != null">status = #{orderRecord.status},</if>
+            <if test="orderRecord.totalFuzhuang != null">total_fuzhuang = #{orderRecord.totalFuzhuang},</if>
+            <if test="orderRecord.totalRiyong != null">total_riyong = #{orderRecord.totalRiyong},</if>
+        </set>
+        WHERE id = #{orderRecord.id}
+    </update>
+    <update id="updateOrderDetail">
+        UPDATE aixin_order_detail
+        <set>
+            <if test="orderDetail.orderNum != null">goods_num = #{orderDetail.orderNum}</if>
+        </set>
+        WHERE id = #{orderDetail.id}
+    </update>
+    <select id="selectOrderById" resultMap="orderRecord">
+        SELECT re.id,
+        re.create_time,
+        re.campus,
+        re.status,
+        re.total_fuzhuang,
+        re.total_riyong,
+        student.id as sid,
+        student.balance_riyong,
+        student.balance_fuzhuang,
+        student.contact,
+        student.campus as scampus,
+        info.name,
+        info.grade,
+        info.stuNum,
+        department.departmentName,
+        imbursetype.imburseTypeName,
+        special.specialName,
+        de.id as did,
+        de.goods_num,
+        g.id as gid,
+        g.barcode,
+        g.goods_name,
+        g.specs,
+        g.money_type,
+        g.goods_type,
+        t.classification,
+        g.price,
+        g.limit_buy_num,
+        g.limit_buy_type,
+        g.images
+        FROM aixin_order_record re
+        LEFT JOIN aixin_student student ON re.buyer_id = student.id
+        LEFT JOIN aixin_order_detail de ON de.order_id = re.id
+        LEFT JOIN aixin_goods g ON de.goods_id = g.id,
+        info_student info,
+        param_department department,
+        param_imburseType imbursetype,
+        param_special special,
+        aixin_goods_type t
+        <where>
+            student.info_student_id=info.id
+            and info.departmentId=department.id
+            and info.specialNum=special.id
+            and info.imburseType=imbursetype.id
+            and g.goods_type = t.id
+            and re.id = #{id}
+        </where>
+    </select>
+    <select id="selectOrderRecord" resultMap="orderRecord">
+        SELECT re.id,
+        re.create_time,
+        re.campus,
+        re.status,
+        re.total_fuzhuang,
+        re.total_riyong,
+        student.id as sid,
+        student.balance_riyong,
+        student.balance_fuzhuang,
+        student.contact,
+        student.campus as scampus,
+        info.name,
+        info.grade,
+        info.stuNum,
+        department.departmentName,
+        imbursetype.imburseTypeName,
+        special.specialName,
+        de.id as did,
+        de.goods_num,
+        g.id as gid,
+        g.barcode,
+        g.goods_name,
+        g.specs,
+        g.money_type,
+        g.goods_type,
+        t.classification,
+        g.price,
+        g.limit_buy_num,
+        g.limit_buy_type,
+        g.images
+        FROM aixin_order_record re
+             LEFT JOIN aixin_student student ON re.buyer_id = student.id
+             LEFT JOIN aixin_order_detail de ON de.order_id = re.id
+             LEFT JOIN aixin_goods g ON de.goods_id = g.id,
+             info_student info,
+             param_department department,
+             param_imburseType imbursetype,
+             param_special special,
+             aixin_goods_type t
+        <where>
+            student.info_student_id=info.id
+            and info.departmentId=department.id
+            and info.specialNum=special.id
+            and info.imburseType=imbursetype.id
+            and g.goods_type = t.id
+            <if test="orderRecord.student.id != null">and re.buyer_id = #{orderRecord.student.id}</if>
+            <if test="orderRecord.campus != null">and re.campus = #{orderRecord.campus}</if>
+            <if test="orderRecord.status != null">and re.status = #{orderRecord.status}</if>
+            <if test="orderRecord.student!=null and orderRecord.student.stuNum != null">
+                and info.stuNum = #{orderRecord.student.stuNum}
+            </if>
+            <if test="orderRecord.student!=null and orderRecord.student.name != null">
+                and info.name LIKE concat('%',#{orderRecord.student.name}, '%')
+            </if>
+        </where>
+        ORDER BY re.create_time DESC
+        LIMIT #{pageIndex},#{pageSize}
+    </select>
+    <select id="getOrderRecordCount" resultType="int">
+        SELECT COUNT(1)
+        FROM aixin_order_record re
+        <where>
+            <if test="orderRecord.student.id != null">and re.buyer_id = #{orderRecord.student.id}</if>
+            <if test="orderRecord.campus != null">and re.campus = #{orderRecord.campus}</if>
+            <if test="orderRecord.status != null">and re.status = #{orderRecord.status}</if>
+        </where>
+    </select>
+
+    <select id="getOrderCount" resultType="int">
+        SELECT COUNT(1)
+
+#         FROM aixin_order_record re
+#         LEFT JOIN aixin_student student ON re.buyer_id = student.id,
+#         info_student info
+<!--        <where>-->
+<!--            student.info_student_id=info.id-->
+<!--            <if test="orderRecord.student.id != null">and re.buyer_id = #{orderRecord.student.id}</if>-->
+<!--            <if test="orderRecord.campus != null">and re.campus = #{orderRecord.campus}</if>-->
+<!--            <if test="orderRecord.status != null">and re.status = #{orderRecord.status}</if>-->
+<!--            <if test="orderRecord.student!=null and orderRecord.student.stuNum != null">-->
+<!--                and info.stuNum = #{orderRecord.student.stuNum}-->
+<!--            </if>-->
+<!--            <if test="orderRecord.student!=null and orderRecord.student.name != null">-->
+<!--                and info.name LIKE concat('%',#{orderRecord.student.name}, '%')-->
+<!--            </if>-->
+<!--        </where>-->
+
+        FROM aixin_order_record re
+        LEFT JOIN aixin_student student ON re.buyer_id = student.id
+        LEFT JOIN aixin_order_detail de ON de.order_id = re.id
+        LEFT JOIN aixin_goods g ON de.goods_id = g.id,
+        info_student info,
+        param_department department,
+        param_imburseType imbursetype,
+        param_special special,
+        aixin_goods_type t
+        <where>
+            student.info_student_id=info.id
+            and info.departmentId=department.id
+            and info.specialNum=special.id
+            and info.imburseType=imbursetype.id
+            and g.goods_type = t.id
+            <if test="orderRecord.student.id != null">and re.buyer_id = #{orderRecord.student.id}</if>
+            <if test="orderRecord.campus != null">and re.campus = #{orderRecord.campus}</if>
+            <if test="orderRecord.status != null">and re.status = #{orderRecord.status}</if>
+            <if test="orderRecord.student!=null and orderRecord.student.stuNum != null">
+                and info.stuNum = #{orderRecord.student.stuNum}
+            </if>
+            <if test="orderRecord.student!=null and orderRecord.student.name != null">
+                and info.name LIKE concat('%',#{orderRecord.student.name}, '%')
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getOrderGoodsSum" resultType="int">
+        SELECT sum(goods_num)
+        FROM aixin_order_detail
+        WHERE student_id = #{uid}
+            <![CDATA[   and DATE_FORMAT(create_time, '%Y-%m-%d')>=  DATE_FORMAT(#{highDate}, '%Y-%m-%d')   ]]>
+            <![CDATA[  and DATE_FORMAT(create_time, '%Y-%m-%d') <= DATE_FORMAT(#{downDate}, '%Y-%m-%d')    ]]>
+    </select>
+    <delete id="deleteOrder">
+        DELETE FROM aixin_order_record
+        WHERE id = #{id}
+    </delete>
+    <delete id="deleteOrderDetail">
+        DELETE FROM aixin_order_detail
+        WHERE id = #{id}
+    </delete>
+
+
+
+</mapper>
