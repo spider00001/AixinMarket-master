@@ -6,8 +6,6 @@ import com.bluemsun.entity.GoodsItem;
 import java.util.List;
 
 public interface CartItemDao {
-
-
     //添加商品条目
     public Integer insertItem(CartItemDto cartItemDto);
     //删除商品条目
