@@ -20,6 +20,9 @@ public class CrossOriginFilter implements Filter {
 
         request.getSession().setMaxInactiveInterval(-1);
 
+        String domain = request.getHeader("Origin");
+        response.addHeader("Set-Cookie","Domain="+domain+"; Path=/");
+
            //允许跨域的域名。单个域名、*(匹配所有域名)
            //request.getHeader("Origin") 即直接获取请求头的origin的值，即请求方的域名
            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
