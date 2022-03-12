@@ -5,6 +5,7 @@ import com.bluemsun.entity.Student;
 import com.bluemsun.entity.StudentType;
 import com.bluemsun.service.UserService;
 import com.bluemsun.util.HttpRequestUtil;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -373,7 +374,6 @@ public class UserController {
         Seller seller = (Seller)session.getAttribute("seller");
         if (seller == null)  {
             map.put("code",1);
-
         } else {
             map.put("code",0);
             map.put("seller",seller);
