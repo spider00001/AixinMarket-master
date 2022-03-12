@@ -14,12 +14,11 @@ public class HeaderInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        String domain = request.getHeader("Origin");
-        System.out.println(domain+"+++++++++=====");
-        response.addHeader("Set-Cookie","Domain="+domain+"; Path=/");
+//        String domain = request.getHeader("Origin");
+//        System.out.println(domain+"+++++++++=====");
+        response.addHeader("Set-Cookie","Domain=127.0.0.1; Path=/");
         //允许跨域的域名，*号为允许所有,存在被 DDoS攻击的可能。
         String origin = request.getHeader("origin");
-        System.out.println(origin+"==========");
 //        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 //
 //        //表明服务器支持的所有头信息字段

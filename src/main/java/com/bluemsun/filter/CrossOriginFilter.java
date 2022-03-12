@@ -1,6 +1,7 @@
 package com.bluemsun.filter;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -17,13 +18,15 @@ public class CrossOriginFilter implements Filter {
         //强制类型转换成Http
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-
         request.getSession().setMaxInactiveInterval(-1);
-
-//        String domain = request.getServerName();
-//        response.addHeader("Set-Cookie","Domain="+domain+"; Path=/");
-
-           //允许跨域的域名。单个域名、*(匹配所有域名)
+//        response.addHeader("Set-Cookie","Domain=127.0.0.1; Path=/");
+//        String setCookie = request.getHeader("Set-Cookie");
+//        setCookie = setCookie+"; domain="+request.getHeader("Origin");
+//        response.setHeader("Set-Cookie",setCookie);
+//        String setCookie = response.getHeader("Set-Cookie");
+//        setCookie = setCookie + setCookie+"; domain="+request.getHeader("Origin");
+//        response.setHeader("Set-Cookie",setCookie);
+        //允许跨域的域名。单个域名、*(匹配所有域名)
            //request.getHeader("Origin") 即直接获取请求头的origin的值，即请求方的域名
            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 
