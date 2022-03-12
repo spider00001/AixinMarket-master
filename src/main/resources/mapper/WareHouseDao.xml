@@ -90,13 +90,13 @@
                 AND goods.goods_name LIKE concat('%',#{warehouse.goods.goodsName}, '%')
             </if>
         </where>
-        LIMIT #{pageIndex},#{pageSize}
         <if test="priceRank!=null and priceRank==true">
             ORDER BY goods.price asc
         </if>
         <if test="priceRank!=null and priceRank==false">
             ORDER BY goods.price DESC
         </if>
+        LIMIT #{pageIndex},#{pageSize}
     </select>
     <select id="getWareHouseCount" resultType="int">
         SELECT COUNT(1)
