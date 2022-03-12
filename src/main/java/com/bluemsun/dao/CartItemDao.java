@@ -8,6 +8,9 @@ import java.util.List;
 public interface CartItemDao {
     //添加商品条目
     public Integer insertItem(CartItemDto cartItemDto);
+
+
+
     //删除商品条目
     public Integer deleteItem(CartItemDto cartItemDto);
     //修改商品条目
