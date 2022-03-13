@@ -209,8 +209,8 @@ public class UserController {
         String contact = HttpRequestUtil.getString(reqMap,"contact");
         Integer campus = HttpRequestUtil.getInt(reqMap,"campus");
         String username = HttpRequestUtil.getString(reqMap,"username");
-        String password = HttpRequestUtil.getString(reqMap,"password");
-        if (contact==null||username==null||password==null||campus==-1){
+//        String password = HttpRequestUtil.getString(reqMap,"password");
+        if (contact==null||username==null||campus==-1){
             map.put("code",2001);
             map.put("msg","空数据");
             return map;
