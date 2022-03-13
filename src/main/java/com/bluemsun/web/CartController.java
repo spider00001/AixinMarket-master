@@ -92,7 +92,7 @@ public class CartController {
         return map;
     }
 
-    @RequestMapping(value = "/getItems",method = RequestMethod.POST)
+    @RequestMapping(value = "/getItems",method = RequestMethod.GET)
     public Map getItems(HttpServletRequest request, @RequestBody GoodsItem goodsItem){
         Map map = new HashMap();
         List<CartItemDto> list = new ArrayList<>();
@@ -102,7 +102,7 @@ public class CartController {
             map.put("code","1002");
             map.put("msg","用户未登录");
         }else {
-            goodsItem.setStuNum(student.getStuNum());
+            goodsItem.setStuNum(student.getName());
             map = cartService.getItems(goodsItem);
             list = (List)map.get("data");
             if (list.size() == 0){
