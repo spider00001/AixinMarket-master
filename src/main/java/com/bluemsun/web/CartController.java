@@ -98,17 +98,22 @@ public class CartController {
         List<CartItemDto> list = new ArrayList<>();
         HttpSession session = request.getSession();
         Student student = (Student) session.getAttribute("student");
-        goodsItem.setStuNum(student.getStuNum());
-        map = cartService.getItems(goodsItem);
-        list = (List)map.get("data");
-        if (list.size() == 0){
-            map.put("code","1004");
-            map.put("msg","购物车为空");
+        if(student == null){
+            map.put("code","1002");
+            map.put("msg","用户未登录");
         }else {
-            map.put("code","2004");
-            map.put("msg","查询成功");
-            map.put("pageNum",goodsItem.getPageNum());
-            map.put("pageSize",goodsItem.getPageSize());
+            goodsItem.setStuNum(student.getStuNum());
+            map = cartService.getItems(goodsItem);
+            list = (List)map.get("data");
+            if (list.size() == 0){
+                map.put("code","1004");
+                map.put("msg","购物车为空");
+            }else {
+                map.put("code","2004");
+                map.put("msg","查询成功");
+                map.put("pageNum",goodsItem.getPageNum());
+                map.put("pageSize",goodsItem.getPageSize());
+            }
         }
         return map;
     }

@@ -304,7 +304,7 @@ public class OrderServiceImpl implements OrderService {
     //取消订单
     @Override
     @Transactional
-    public Integer cancelOrder(int uid,int oid){
+    public Integer cancelOrder(int uid, int oid){
         try{
             OrderRecord orderRecord = orderRecordDao.selectOrderById(oid);
             Student student = studentDao.getStudentById(uid);
