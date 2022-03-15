@@ -61,6 +61,7 @@ public class CartController {
     @RequestMapping(value = "/changeItem",method = RequestMethod.POST)
     public Map changeItem(HttpServletRequest request, @RequestBody GoodsItem goodsItem){
         Map map = new HashMap();
+
         HttpSession session = request.getSession();
         Student student = (Student) session.getAttribute("student");
         Integer flag = cartService.changeItem(goodsItem);
@@ -92,7 +93,7 @@ public class CartController {
         return map;
     }
 
-    @RequestMapping(value = "/getItems",method = RequestMethod.GET)
+    @RequestMapping(value = "/getItems",method = RequestMethod.POST)
     public Map getItems(HttpServletRequest request, @RequestBody GoodsItem goodsItem){
         Map map = new HashMap();
         List<CartItemDto> list = new ArrayList<>();
@@ -102,7 +103,7 @@ public class CartController {
             map.put("code","1002");
             map.put("msg","用户未登录");
         }else {
-            goodsItem.setStuNum(student.getName());
+//            goodsItem.setStuNum(student.getName());
             map = cartService.getItems(goodsItem);
             list = (List)map.get("data");
             if (list.size() == 0){
@@ -113,6 +114,8 @@ public class CartController {
                 map.put("msg","查询成功");
                 map.put("pageNum",goodsItem.getPageNum());
                 map.put("pageSize",goodsItem.getPageSize());
+                map.put("campus",student.getCampus());
+                map.put("studentId",student.getId());
             }
         }
         return map;

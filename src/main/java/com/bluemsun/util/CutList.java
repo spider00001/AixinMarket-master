@@ -11,12 +11,12 @@ public class CutList {
         int cut;
         List resp = new ArrayList();
         if (len - ((pageNum-1)*pageSize) < pageSize && len > ((pageNum-1)*pageSize)){
-            resp = list.subList(((pageNum-1)*pageSize), len - ((pageNum-1)*pageSize));
-        }else if(len < ((pageNum-1)*pageSize)){
-            resp = null;
+            resp = list.subList(((pageNum-1)*pageSize), len);
+        }else if(len <= ((pageNum-1)*pageSize)){
+            resp = new ArrayList();
         }
         else {
-            resp = list.subList(((pageNum-1)*pageSize),pageSize);
+            resp = list.subList(((pageNum-1)*pageSize),((pageNum-1)*pageSize)+pageSize);
         }
         return resp;
     }

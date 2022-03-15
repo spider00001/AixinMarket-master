@@ -24,7 +24,7 @@
         </where>
     </update>
     <select id="getItems" parameterType="com.bluemsun.dto.CartItemDto" resultMap="goodsItemMap">
-        SELECT DISTINCT g.price,g.images,g.money_type,g.goods_name FROM aixin_goods g where g.goods_name in (SELECT stu_cart.goods_name from stu_cart WHERE stu_cart.stu_name = #{goodsItem.stuNum})
+        SELECT DISTINCT g.price,g.images,g.money_type,g.goods_name,g.id FROM aixin_goods g where g.goods_name in (SELECT stu_cart.goods_name from stu_cart WHERE stu_cart.stu_name = #{goodsItem.stuNum})
     </select>
     <delete id="deleteItem" parameterType="com.bluemsun.dto.CartItemDto">
         DELETE  FROM  stu_cart
