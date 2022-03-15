@@ -46,6 +46,7 @@ public class CartServiceImpl implements CartService {
             temp.setCartItemDtoList(cartItemDao.getItem(temp));
             if (temp.getCartItemDtoList().size() == 0){
                 CartItemDto cartItemDto = new CartItemDto(goodsItem.getGoodsNum(),goods.getGoodsName(),goods.getPrice(),goodsItem.getStuNum());
+                cartItemDto.setGoodsItem(goodsItem);
                 cartItemDao.insertItem(cartItemDto);
                 flag = 1;
             }else{
@@ -69,7 +70,6 @@ public class CartServiceImpl implements CartService {
     public Integer deleteItem(GoodsItem goodsItem) {
         Integer flag = 0;
         try{
-            System.out.println(goodsItem.toString());
             CartItemDto cartItemDto = new CartItemDto();
             cartItemDto.setGoodsItem(goodsItem);
             flag = cartItemDao.deleteItem(cartItemDto);
@@ -106,7 +106,6 @@ public class CartServiceImpl implements CartService {
             List<CartItemDto> list = cartItemDao.getItems(cartItemDto);
             cartItemDto.getGoodsItem().setGoodsName(null);
             List<CartItemDto> list1 = cartItemDao.getItem(cartItemDto);
-            List<CartItemDto> ans = new ArrayList<>();
             if (list1.size() == 0){
                 Map map = new HashMap();
                 map.put("data",list);
@@ -123,7 +122,6 @@ public class CartServiceImpl implements CartService {
                 int count = cartItemDao.countItems(cartItemDto);
                 List resp = CutList.cutList(list,goodsItem.getPageNum(),goodsItem.getPageSize());
                 Map map = new HashMap();
-                map.put("data",ans);
                 map.put("total",count);
                 map.put("data",resp);
                 return map;

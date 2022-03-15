@@ -7,6 +7,8 @@ public class GoodsItem {
     private Integer goodsNum;
     //用户信息
     private String stuNum;
+    //用户id
+    private int stuId;
     //商品名称
     private String goodsName;
     //商品价格
@@ -21,6 +23,15 @@ public class GoodsItem {
     private int pageNum;
     //size
     private int pageSize;
+
+
+    public int getStuId() {
+        return stuId;
+    }
+
+    public void setStuId(int stuId) {
+        this.stuId = stuId;
+    }
 
     public int getPageNum() {
         return pageNum;

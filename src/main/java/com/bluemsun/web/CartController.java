@@ -29,7 +29,6 @@ public class CartController {
     public Map addItem(HttpServletRequest request, @RequestBody GoodsItem goodsItem){
         Map map = new HashMap();
         HttpSession session = request.getSession();
-
         Student student = (Student) session.getAttribute("student");
         int flag = 0;
         if (student==null){
@@ -37,23 +36,24 @@ public class CartController {
             map.put("msg","用户未登录");
             return map;
         } else {
+            goodsItem.setStuId(student.getId());
             flag = cartService.buildItem(goodsItem);
-                if (flag == 1){
-                    map.put("code","2004");
-                    map.put("msg","添加成功");
-                }
-                if (flag == 2){
-                    map.put("code","2004");
-                    map.put("msg","已添加购物车");
-                }
-                if (flag == 3){
-                    map.put("code","2004");
-                    map.put("msg","添加失败");
-                }
-                if (flag == 4){
-                    map.put("code","2004");
-                    map.put("msg","商品已下架");
-                }
+            if (flag == 1){
+                map.put("code","2004");
+                map.put("msg","添加成功");
+            }
+            if (flag == 2){
+                map.put("code","2004");
+                map.put("msg","已添加购物车");
+            }
+            if (flag == 3){
+                map.put("code","2004");
+                map.put("msg","添加失败");
+            }
+            if (flag == 4){
+                map.put("code","2004");
+                map.put("msg","商品已下架");
+            }
             return map;
         }
     }
@@ -61,9 +61,9 @@ public class CartController {
     @RequestMapping(value = "/changeItem",method = RequestMethod.POST)
     public Map changeItem(HttpServletRequest request, @RequestBody GoodsItem goodsItem){
         Map map = new HashMap();
-
         HttpSession session = request.getSession();
         Student student = (Student) session.getAttribute("student");
+        goodsItem.setStuId(student.getId());
         Integer flag = cartService.changeItem(goodsItem);
         if (flag == 1){
             map.put("code","2004");
@@ -80,6 +80,7 @@ public class CartController {
         Map map = new HashMap();
         HttpSession session = request.getSession();
         Student student = (Student) session.getAttribute("student");
+        goodsItem.setStuId(student.getId());
         Integer flag = cartService.deleteItem(goodsItem);
         System.out.println(flag);
         if (flag == 1){
@@ -103,7 +104,7 @@ public class CartController {
             map.put("code","1002");
             map.put("msg","用户未登录");
         }else {
-//            goodsItem.setStuNum(student.getName());
+            goodsItem.setStuId(student.getId());
             map = cartService.getItems(goodsItem);
             list = (List)map.get("data");
             if (list.size() == 0){
