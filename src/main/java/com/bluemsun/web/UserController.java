@@ -105,7 +105,11 @@ public class UserController {
             return resMap;
         }
         String contact = HttpRequestUtil.getString(reqMap,"contact");
+        // add
+        Integer campus = HttpRequestUtil.getInt(reqMap,"campus");
         student.setContact(contact);
+        // add
+        student.setCampus(campus);
         Boolean flag = userService.updateStudentInfo(student);
         if (!flag){
             resMap.put("code",2004);

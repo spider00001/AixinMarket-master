@@ -114,7 +114,6 @@ public class OrderServiceImpl implements OrderService {
             cartItemDto.setGoodsItem(goodsItem);
             cartItemDao.deleteItem(cartItemDto);
 
-
             try{
                 wareHouse = wareHouseDao.getWareHouseByGoodId(wareHouse);
             }catch (Exception e){
@@ -146,7 +145,6 @@ public class OrderServiceImpl implements OrderService {
             balance = balance - (float) orderRecordDto.getTotalRiyong();
             student.setBalanceRiyong(balance);
             studentDao.updateStudent(student);
-
             orderRecordDao.insertOrder(orderRecord);
             orderRecordDao.insertOrderDetailList(orderRecord);
         }catch (Exception e){
