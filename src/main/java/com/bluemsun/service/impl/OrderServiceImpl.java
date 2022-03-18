@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -139,11 +141,13 @@ public class OrderServiceImpl implements OrderService {
         orderRecord.setOrderDetailList(orderDetailList);
         try{
             //学生减少一定量的代币
-            float balance = student.getBalanceFuzhuang();
-            balance = balance - (float) orderRecordDto.getTotalFuzhuang();
-            student.setBalanceFuzhuang(balance);
-            balance = balance - (float) orderRecordDto.getTotalRiyong();
-            student.setBalanceRiyong(balance);
+//            float balance = student.getBalanceFuzhuang();
+//            balance = balance - (float) orderRecordDto.getTotalFuzhuang();
+//            student.setBalanceFuzhuang(balance);
+            student.setBalanceFuzhuang(student.getBalanceFuzhuang() - orderRecordDto.getTotalFuzhuang());
+//            balance = balance - (float) orderRecordDto.getTotalRiyong();
+//            student.setBalanceRiyong(balance);
+            student.setBalanceRiyong(student.getBalanceRiyong() - orderRecordDto.getTotalRiyong());
             studentDao.updateStudent(student);
             orderRecordDao.insertOrder(orderRecord);
             orderRecordDao.insertOrderDetailList(orderRecord);
@@ -228,7 +232,7 @@ public class OrderServiceImpl implements OrderService {
         wareHouse.setCampus(orderRecord.getCampus());
         wareHouse = wareHouseDao.getWareHouseByGoodId(wareHouse);
         Student student = orderRecord.getStudent();
-        if (goods.getMoneyType()){
+        if (goods.getMoneyType() == 1){
             //服装币
             student.setBalanceFuzhuang(student.getBalanceFuzhuang()+price);
             orderRecord.setTotalFuzhuang(orderRecord.getTotalFuzhuang()-price);
@@ -257,14 +261,22 @@ public class OrderServiceImpl implements OrderService {
     public Integer confirmOrder(OrderRecord orderRecord){
         return null;
     }
+
     //通过属性查看订单
     @Override
     @Transactional
-    public List<OrderRecord> getOrderList(OrderRecord orderRecord,int pageNum,int pageSize){
+    public List getOrderList(OrderRecord orderRecord,int pageNum,int pageSize){
         List flag = null;
         int pageIndex = PageUtil.getRowIndex(pageNum,pageSize);
         try{
-            flag = orderRecordDao.selectOrderRecord(orderRecord,pageIndex,pageSize);
+            List<OrderRecord> orderRecords = orderRecordDao.selectOrder(orderRecord,pageIndex,pageSize);
+            for (OrderRecord o : orderRecords) {
+                Student student = studentDao.getStudentById(o.getStudent().getId());
+                List<OrderDetail> orderDetailList = orderRecordDao.selectOrderDetailsOfOrderRecord(orderRecord);
+                o.setStudent(student);
+                o.setOrderDetailList(orderDetailList);
+                flag.add(o);
+            }
         }catch (Exception e){
             e.printStackTrace();
             logger.error("查看订单时出错："+e.getMessage());
@@ -302,13 +314,16 @@ public class OrderServiceImpl implements OrderService {
     //取消订单
     @Override
     @Transactional
-    public Integer cancelOrder(int uid, int oid){
+    public Integer cancelOrder(int uid, int oid, HttpServletRequest request){
         try{
             OrderRecord orderRecord = orderRecordDao.selectOrderById(oid);
             Student student = studentDao.getStudentById(uid);
-            student.setBalanceRiyong(student.getBalanceRiyong()+ orderRecord.getTotalRiyong());
-            student.setBalanceFuzhuang(student.getBalanceFuzhuang()+orderRecord.getTotalFuzhuang());
+            student.setBalanceRiyong(student.getBalanceRiyong() + orderRecord.getTotalRiyong());
+            student.setBalanceFuzhuang(student.getBalanceFuzhuang() + orderRecord.getTotalFuzhuang());
             studentDao.updateStudent(student);
+            HttpSession session = request.getSession();
+            session.removeAttribute("student");
+            session.setAttribute("student",student);
             for (OrderDetail detail:orderRecord.getOrderDetailList()){
                 Goods goods = detail.getGoods();
                 WareHouse wareHouse = new WareHouse();

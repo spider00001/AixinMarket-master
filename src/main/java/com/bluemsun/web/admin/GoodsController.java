@@ -207,12 +207,15 @@ public class GoodsController {
         }
         String barcode = HttpRequestUtil.getString(reqMap,"barcode");
         String goodsName = HttpRequestUtil.getString(reqMap,"goodsName");
-        Boolean moneyType = HttpRequestUtil.getBoolean(reqMap,"moneyType");
+        Integer moneyType = HttpRequestUtil.getInt(reqMap,"moneyType");
         Float highPrice = HttpRequestUtil.getFloat(reqMap,"highPrice");
         Float lowPrice = HttpRequestUtil.getFloat(reqMap,"lowPrice");
         Integer goodsType = HttpRequestUtil.getInt(reqMap,"goodsType");
         if (goodsType==-1){
             goodsType = null;
+        }
+        if (moneyType == -1) {
+            moneyType = null;
         }
         Goods goods = new Goods();
         goods.setBarcode(barcode);

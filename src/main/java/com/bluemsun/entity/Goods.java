@@ -10,7 +10,8 @@ public class Goods {
     //商品描述
     private String specs;
     //货币类型 false是日用币，true是服装币
-    private Boolean moneyType;
+                //0          1
+    private Integer moneyType;
     //商品类型
     private Integer goodsType;
     private String goodsTypeName;
@@ -55,11 +56,11 @@ public class Goods {
         this.specs = specs;
     }
 
-    public Boolean getMoneyType() {
+    public Integer getMoneyType() {
         return moneyType;
     }
 
-    public void setMoneyType(Boolean moneyType) {
+    public void setMoneyType(Integer moneyType) {
         this.moneyType = moneyType;
     }
 

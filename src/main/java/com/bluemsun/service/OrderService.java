@@ -4,6 +4,7 @@ import com.bluemsun.dto.OrderRecordDto;
 import com.bluemsun.entity.OrderDetail;
 import com.bluemsun.entity.OrderRecord;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface OrderService {
@@ -25,7 +26,7 @@ public interface OrderService {
     //修改订单详情
     public Integer changeOrderDetail(int orderId,OrderDetail orderDetail);
     //取消订单
-    public Integer cancelOrder(int uid,int oid);
+    public Integer cancelOrder(int uid, int oid, HttpServletRequest request);
     //管理员看订单数量
     public Integer adminGetOrderCount(OrderRecord orderRecord);
     //管理员删除订单

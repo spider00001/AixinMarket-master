@@ -105,6 +105,8 @@ public class WareHouseServiceImpl implements WareHouseService {
         return flag;
     }
 
+
+
     @Override
     public Integer getWareHouseCount(WareHouse wareHouse){
         Integer flag;

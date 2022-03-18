@@ -18,10 +18,19 @@ public interface OrderRecordDao {
     public Integer updateOrderDetail(@Param("orderDetail") OrderDetail orderDetail);
     //根据id查询订单
     public OrderRecord selectOrderById(int id);
+    //查询订单 (分页用)
+    public List<OrderRecord> selectOrder(@Param("orderRecord") OrderRecord orderRecord,
+                                   @Param("pageIndex") int pageIndex,
+                                   @Param("pageSize") int pageSize);
+    public List<OrderDetail> selectOrderDetailsOfOrderRecord(@Param("orderRecord") OrderRecord orderRecord);
+
+    public OrderRecord getOrderRecordById(@Param("id") int id);
+
     //根据其他属性查询订单
     public List<OrderRecord> selectOrderRecord(@Param("orderRecord") OrderRecord orderRecord,
                                                @Param("pageIndex") int pageIndex,
-                                               @Param("pageSize") int pageSize);
+                                               @Param("pageSize") int pageSize,
+                                               @Param("orderRecordId") int orderRecordId);
     //获得订单总数量
     public Integer getOrderRecordCount(@Param("orderRecord") OrderRecord orderRecord);
     //获得管理员看订单的数量

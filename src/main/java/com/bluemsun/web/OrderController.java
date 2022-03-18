@@ -49,6 +49,11 @@ public class OrderController {
                 break;
             case 1 :
                 map.put("code",0);
+                student.setBalanceFuzhuang(student.getBalanceFuzhuang() - orderRecordDto.getTotalFuzhuang());
+                student.setBalanceRiyong(student.getBalanceRiyong() - orderRecordDto.getTotalRiyong());
+                session.removeAttribute("student");
+                session.setAttribute("student",student);
+                map.put("studentTest",student);
                 break;
             case 2 :
                 map.put("code",2004);
@@ -91,9 +96,10 @@ public class OrderController {
             map.put("msg","数据为空");
             return map;
         }
-        if(1==orderService.cancelOrder(uid,orderId)){
+        if(1==orderService.cancelOrder(uid, orderId,request)){
             map.put("code",0);
             map.put("msg","删除成功");
+
             return map;
         }else{
             map.put("code",2004);

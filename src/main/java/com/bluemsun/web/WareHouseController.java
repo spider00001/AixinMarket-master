@@ -148,7 +148,13 @@ public class WareHouseController {
             goodsType=null;
         }
         String goodsName = HttpRequestUtil.getString(reqMap,"goodsName");
-        Boolean moneyType = HttpRequestUtil.getBoolean(reqMap,"moneyType");
+        Integer moneyType = HttpRequestUtil.getInt(reqMap,"moneyType");
+        if (moneyType == -1) {
+            moneyType = null;
+        }
+        System.out.println("======== " + moneyType + " ========="+goodsType);
+
+
         Boolean priceRank = HttpRequestUtil.getBoolean(reqMap,"priceRank");
         WareHouse wareHouse = new WareHouse();
         Goods goods = new Goods();
@@ -161,7 +167,7 @@ public class WareHouseController {
         Integer total = wareHouseService.getWareHouseCount(wareHouse);
         if (wareHouseList==null){
             map.put("code",2004);
-            map.put("msg","修改失败");
+            map.put("msg","数据为空");
         }else {
             map.put("code",0);
             Map data = new HashMap();

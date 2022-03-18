@@ -21,6 +21,7 @@ public interface WareHouseDao {
                                             @Param("pageIndex") int pageIndex,
                                             @Param("pageSize") int pageSize,
                                             @Param("priceRank") Boolean priceRank);
+
     Integer getWareHouseCount(@Param("warehouse") WareHouse wareHouse);
     //用商品id和校区获取到商品信息
     WareHouse getWareHouseByGoodId(@Param("warehouse") WareHouse wareHouse);
