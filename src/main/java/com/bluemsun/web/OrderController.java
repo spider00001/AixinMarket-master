@@ -166,7 +166,7 @@ public class OrderController {
         orderRecord.setId(orderRecordId);
         if (orderService.changeOrder(orderRecord)!=1){
             map.put("code",2004);
-            map.put("msg","获取失败");
+            map.put("msg","失败");
         }else {
             map.put("code",0);
         }

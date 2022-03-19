@@ -319,12 +319,14 @@ public class OrderServiceImpl implements OrderService {
         try{
             OrderRecord orderRecord = orderRecordDao.selectOrderById(oid);
             Student student = studentDao.getStudentById(uid);
-            student.setBalanceRiyong(student.getBalanceRiyong() + orderRecord.getTotalRiyong());
+            student.setBalanceRiyong((student.getBalanceRiyong() + orderRecord.getTotalRiyong())%20);
             student.setBalanceFuzhuang(student.getBalanceFuzhuang() + orderRecord.getTotalFuzhuang());
             studentDao.updateStudent(student);
             HttpSession session = request.getSession();
-            session.removeAttribute("student");
-            session.setAttribute("student",student);
+            if (session.getAttribute("student") != null) {
+                session.removeAttribute("student");
+                session.setAttribute("student",student);
+            }
             for (OrderDetail detail:orderRecord.getOrderDetailList()){
                 Goods goods = detail.getGoods();
                 WareHouse wareHouse = new WareHouse();
