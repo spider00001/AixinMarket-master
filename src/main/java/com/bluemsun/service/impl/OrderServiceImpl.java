@@ -16,10 +16,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -266,15 +263,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public List getOrderList(OrderRecord orderRecord,int pageNum,int pageSize){
-        List flag = null;
+        List flag = new LinkedList();
         int pageIndex = PageUtil.getRowIndex(pageNum,pageSize);
         try{
             List<OrderRecord> orderRecords = orderRecordDao.selectOrder(orderRecord,pageIndex,pageSize);
             for (OrderRecord o : orderRecords) {
-                Student student = studentDao.getStudentById(o.getStudent().getId());
-                List<OrderDetail> orderDetailList = orderRecordDao.selectOrderDetailsOfOrderRecord(orderRecord);
+                System.out.println("`````"+o+"`````");
+                Student student = studentDao.getStudentByInfoStudentId(o.getStudent().getId());
+                System.out.println("========= "+student+" ======");
+                List<OrderDetail> orderDetailList = orderRecordDao.selectOrderDetailsOfOrderRecord(o.getId());
+                System.out.println("=========------ "+orderDetailList+" -----======");
                 o.setStudent(student);
                 o.setOrderDetailList(orderDetailList);
+
                 flag.add(o);
             }
         }catch (Exception e){
@@ -349,7 +350,7 @@ public class OrderServiceImpl implements OrderService {
     public Integer adminGetOrderCount(OrderRecord orderRecord){
         Integer flag = null;
         try{
-            flag = orderRecordDao.getOrderCount(orderRecord);
+            flag = orderRecordDao.getOrderRecordCount(orderRecord);
         }catch (Exception e){
             e.printStackTrace();
             logger.error("管理员查看订单数量时出错："+e.getMessage());

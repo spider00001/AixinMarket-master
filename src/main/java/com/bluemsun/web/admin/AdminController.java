@@ -93,7 +93,6 @@ public class AdminController {
     @RequestMapping(value = "/order",method = RequestMethod.GET)
     public Map getOrderRecord(HttpServletRequest request,@RequestParam Map<String,String> reqMap){
         Map map = new HashMap();
-
         HttpSession session = request.getSession();
         String admin = (String) session.getAttribute("admin");
         if (admin==null||!admin.equals("admin2020")){

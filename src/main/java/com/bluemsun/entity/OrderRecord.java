@@ -79,4 +79,18 @@ public class OrderRecord {
     public void setCampus(Integer campus) {
         this.campus = campus;
     }
+
+    @Override
+    public String toString() {
+        return "OrderRecord{" +
+                "id=" + id +
+                ", student=" + student +
+                ", createTime=" + createTime +
+                ", status=" + status +
+                ", totalFuzhuang=" + totalFuzhuang +
+                ", totalRiyong=" + totalRiyong +
+                ", campus=" + campus +
+                ", orderDetailList=" + orderDetailList +
+                '}';
+    }
 }

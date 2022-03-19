@@ -16,6 +16,7 @@ public interface StudentDao {
                                         @Param("password") String password);
     //通过学生表id获得学生信息（anxin_student.id）
     public Student getStudentById(@Param("id")int id);
+    public Student getStudentByInfoStudentId(@Param("id") int id);
     public Student getStudentByStuNum(@Param("stuNum")String stuNum);
     //通过学生类型模糊搜索学生
     public List<Student> getStudentList(@Param("studentType") StudentType studentType,

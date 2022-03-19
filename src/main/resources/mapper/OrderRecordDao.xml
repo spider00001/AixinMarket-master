@@ -187,11 +187,18 @@
     </select>
     <select id="getOrderRecordCount" resultType="int">
         SELECT COUNT(1)
-        FROM aixin_order_record re
+        FROM aixin_order_record re,
+          info_student info,
+        aixin_student student
         <where>
+            student.info_student_id=info.id
+            and re.buyer_id = student.id
             <if test="orderRecord.student.id != null">and re.buyer_id = #{orderRecord.student.id}</if>
             <if test="orderRecord.campus != null">and re.campus = #{orderRecord.campus}</if>
             <if test="orderRecord.status != null">and re.status = #{orderRecord.status}</if>
+            <if test="orderRecord.student!=null and orderRecord.student.name != null">
+                and info.name LIKE concat('%',#{orderRecord.student.name}, '%')
+            </if>
         </where>
     </select>
 
@@ -224,12 +231,11 @@
         param_special special,
         aixin_goods_type t
         <where>
-        1
-#             student.info_student_id=info.id
-#             and info.departmentId=department.id
-#             and info.specialNum=special.id
-#             and info.imburseType=imbursetype.id
-#             and g.goods_type = t.id
+            student.info_student_id=info.id
+            and info.departmentId=department.id
+            and info.specialNum=special.id
+            and info.imburseType=imbursetype.id
+            and g.goods_type = t.id
 <!--            <if test="orderRecord.student.id != null">and re.buyer_id = #{orderRecord.student.id}</if>-->
             <if test="orderRecord.campus != null">and re.campus = #{orderRecord.campus}</if>
             <if test="orderRecord.status != null">and re.status = #{orderRecord.status}</if>
@@ -261,9 +267,11 @@
                re.campus,
                info.id as sid
         FROM aixin_order_record re,
-             info_student info
+        info_student info,
+        aixin_student student
         <where>
-            1
+            student.info_student_id = info.id
+            AND re.buyer_id = student.id
             <if test="orderRecord.student.id != null">and re.buyer_id = #{orderRecord.student.id}</if>
             <if test="orderRecord.campus != null">and re.campus = #{orderRecord.campus}</if>
             <if test="orderRecord.status != null">and re.status = #{orderRecord.status}</if>
@@ -282,7 +290,7 @@
         from aixin_order_record
         where id = #{id};
     </select>
-    <select id="selectOrderDetailsOfOrderRecord" resultType="com.bluemsun.entity.OrderDetail">
+    <select id="selectOrderDetailsOfOrderRecord" resultMap="orderDetail">
         SELECT
         de.id as did,
         de.goods_num,
@@ -298,14 +306,12 @@
         g.limit_buy_type,
         g.images
         FROM aixin_order_detail de
-        LEFT JOIN aixin_goods g ON de.goods_id = g.id,
+        JOIN aixin_goods g ON de.goods_id = g.id,
         aixin_goods_type t
         <where>
             g.goods_type = t.id
-            and de.order_id = #{orderRecord.id}
+            and de.order_id = #{id}
         </where>
-        ORDER BY re.create_time DESC
-        LIMIT #{pageIndex},#{pageSize}
     </select>
 
     <delete id="deleteOrder">

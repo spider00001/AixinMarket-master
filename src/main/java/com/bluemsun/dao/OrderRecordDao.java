@@ -22,7 +22,7 @@ public interface OrderRecordDao {
     public List<OrderRecord> selectOrder(@Param("orderRecord") OrderRecord orderRecord,
                                    @Param("pageIndex") int pageIndex,
                                    @Param("pageSize") int pageSize);
-    public List<OrderDetail> selectOrderDetailsOfOrderRecord(@Param("orderRecord") OrderRecord orderRecord);
+    public List<OrderDetail> selectOrderDetailsOfOrderRecord(@Param("id") Integer id);
 
     public OrderRecord getOrderRecordById(@Param("id") int id);
 

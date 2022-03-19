@@ -86,6 +86,7 @@
               and info.imburseType=imbursetype.id
               and student.id = #{id}
     </select>
+
     <select id="getStudentByStuNum" resultMap="studentMap" parameterType="string">
         SELECT  student.id,
                 student.balance_riyong,
@@ -159,5 +160,29 @@
             <if test="studentType.grade != null">and info.grade = #{studentType.grade}</if>
             <if test="studentType.imburseType != null">and info.imburseType = #{studentType.imburseType}</if>
         </where>
+    </select>
+    <select id="getStudentByInfoStudentId" resultType="com.bluemsun.entity.Student">
+        SELECT  student.id,
+                student.balance_riyong,
+                student.balance_fuzhuang,
+                student.contact,
+                student.campus,
+                student.password,
+                info.name,
+                info.grade,
+                info.stuNum,
+                department.departmentName,
+                imbursetype.imburseTypeName,
+                special.specialName
+        FROM aixin_student student,
+             info_student info,
+             param_department department,
+             param_imburseType imbursetype,
+             param_special special
+        WHERE student.info_student_id = #{id}
+          and info.departmentId=department.id
+          and info.specialNum=special.id
+          and info.imburseType=imbursetype.id
+          and student.info_student_id=info.id
     </select>
 </mapper>
