@@ -11,6 +11,7 @@ public interface StudentDao {
     public int updateStudent(@Param("student")Student student);
     //修改所有学生的货币数量
     public int updateBalance(@Param("student")Student student,@Param("imburseType")int imburseType);
+    public int resetBalance(@Param("student")Student student,@Param("imburseType")int imburseType);
     //通过密码获得学生信息
     public Student getStudentByPassword(@Param("studentNum")String stuNum,
                                         @Param("password") String password);

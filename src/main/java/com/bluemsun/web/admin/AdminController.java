@@ -53,7 +53,6 @@ public class AdminController {
     @RequestMapping(value = "/charge",method = RequestMethod.POST)
     public Map chargeMoney(HttpServletRequest request,@RequestBody Map<String,String> reqMap){
         Map map = new HashMap();
-
         HttpSession session = request.getSession();
         String admin = (String) session.getAttribute("admin");
         if (admin==null||!admin.equals("admin2020")){
@@ -65,9 +64,18 @@ public class AdminController {
         int imburseType = HttpRequestUtil.getInt(reqMap,"imburseType");
         Float fuzhuang = HttpRequestUtil.getFloat(reqMap,"fuzhuang");
         Float riyong = HttpRequestUtil.getFloat(reqMap,"riyong");
-        if (imburseType==-1||(fuzhuang==null&&riyong==null)){
+        Integer operator = HttpRequestUtil.getInt(reqMap, "operator");
+
+        if (imburseType==-1||(fuzhuang==null&&riyong==null) || operator==-1){
             map.put("code",2001);
             map.put("msg","空数据");
+            return map;
+        }
+        //1为重置服装币，0为充值
+        if (operator == 1) {
+            userService.resetFuzhuang(fuzhuang, imburseType);
+            map.put("code",0);
+            map.put("msg","重置服装币成功");
             return map;
         }
         try{

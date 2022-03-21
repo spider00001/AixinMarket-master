@@ -249,6 +249,24 @@
         </pluginManagement>
 
         <resources>
+
+            <resource>
+                <!-- 资源所在的位置  -->
+                <directory>src/main/resources</directory>
+                <!--用于指定要包括的文件。可以使用通配符*。例如**/*.xml。 -->
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.tld</include>
+                    <!-- 需要添加的依赖  -->
+                    <include>**/*.html</include>
+                    <include>**/*.css</include>
+                    <include>**/*.js</include>
+                </includes>
+                <!-- :指定是否将filter文件(即上面说的filters里定义的*.property文件)的变量值在这个resource文件有效,例如上面就指定那些变量值在configuration文件无效。 -->
+                <filtering>true</filtering>
+            </resource>
+
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
@@ -257,14 +275,14 @@
                 </includes>
                 <filtering>false</filtering>
             </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <includes>-->
+<!--                    <include>**/*.properties</include>-->
+<!--                    <include>**/*.xml</include>-->
+<!--                </includes>-->
+<!--                <filtering>false</filtering>-->
+<!--            </resource>-->
         </resources>
     </build>
 </project>

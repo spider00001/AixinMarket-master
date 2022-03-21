@@ -34,4 +34,6 @@ public interface UserService {
     public void chargeFuzhuang(float fuzhuang,int imburseType);
     //充值日用币
     public void chargeRiyong(float Riyong,int imburseType);
+    //重置服装币
+    public void resetFuzhuang(float fuzhuang,int imburseType);
 }

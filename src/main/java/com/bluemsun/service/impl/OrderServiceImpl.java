@@ -108,7 +108,8 @@ public class OrderServiceImpl implements OrderService {
             //删除购物车商品
             CartItemDto cartItemDto = new CartItemDto();
             GoodsItem goodsItem = new GoodsItem();
-            goodsItem.setStuNum(student.getName());
+//            goodsItem.setStuNum(student.getName());
+            goodsItem.setStuId(student.getId());
             goodsItem.setGoodsName(g.getGoodsName());
             cartItemDto.setGoodsItem(goodsItem);
             cartItemDao.deleteItem(cartItemDto);
@@ -265,17 +266,14 @@ public class OrderServiceImpl implements OrderService {
     public List getOrderList(OrderRecord orderRecord,int pageNum,int pageSize){
         List flag = new LinkedList();
         int pageIndex = PageUtil.getRowIndex(pageNum,pageSize);
+        System.out.println("pageIndex:"+pageIndex);
         try{
             List<OrderRecord> orderRecords = orderRecordDao.selectOrder(orderRecord,pageIndex,pageSize);
             for (OrderRecord o : orderRecords) {
-                System.out.println("`````"+o+"`````");
                 Student student = studentDao.getStudentByInfoStudentId(o.getStudent().getId());
-                System.out.println("========= "+student+" ======");
                 List<OrderDetail> orderDetailList = orderRecordDao.selectOrderDetailsOfOrderRecord(o.getId());
-                System.out.println("=========------ "+orderDetailList+" -----======");
                 o.setStudent(student);
                 o.setOrderDetailList(orderDetailList);
-
                 flag.add(o);
             }
         }catch (Exception e){

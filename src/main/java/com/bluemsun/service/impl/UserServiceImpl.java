@@ -152,9 +152,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
 //    @Scheduled(cron = "0 0 0 1 3,9 ? ")
     public void updateBalanceFuzhuang() {
-        chargeFuzhuang(tebie_fuzhuang,tebie);
-        chargeFuzhuang(zhongdian_fuzhuang,zhongdian);
-        chargeFuzhuang(yiban_fuzhuang,yiban);
+        resetFuzhuang(tebie_fuzhuang,tebie);
+        resetFuzhuang(zhongdian_fuzhuang,zhongdian);
+        resetFuzhuang(yiban_fuzhuang,yiban);
     }
 
     //充值服装币
@@ -169,6 +169,7 @@ public class UserServiceImpl implements UserService {
         investRecord.setImburseType(imburseType);
         investRecord.setBalanceFuzhuang(fuzhuang);
         try{
+//            studentDao
             studentDao.updateBalance(student,imburseType);
             recordsDao.insertInvestRecord(investRecord);
         }catch (Exception e){
@@ -201,59 +202,84 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public int getTebie() {
-        return tebie;
+    //每学期重置服装币
+    @Override
+    @Transactional
+    public void resetFuzhuang(float fuzhuang,int imburseType){
+        Student student = new Student();
+        InvestRecord investRecord = new InvestRecord();
+        investRecord.setBalanceRiyong(0f);
+        investRecord.setCreateTime(new Date());
+        student.setBalanceFuzhuang(fuzhuang);
+        investRecord.setImburseType(imburseType);
+        investRecord.setBalanceFuzhuang(fuzhuang);
+        try{
+//            studentDao
+            studentDao.resetBalance(student,imburseType);
+            recordsDao.insertInvestRecord(investRecord);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("重置服装币出错,错误信息为："+e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+        logger.info("重置服装币，重置金额为："+fuzhuang+"，资助类型为："+imburseType);
     }
 
-    public void setTebie(int tebie) {
-        this.tebie = tebie;
-    }
 
-    public int getZhongdian() {
-        return zhongdian;
-    }
 
-    public void setZhongdian(int zhongdian) {
-        this.zhongdian = zhongdian;
-    }
-
-    public int getYiban() {
-        return yiban;
-    }
-
-    public void setYiban(int yiban) {
-        this.yiban = yiban;
-    }
-
-    public float getRiyong() {
-        return riyong;
-    }
-
-    public void setRiyong(float riyong) {
-        this.riyong = riyong;
-    }
-
-    public float getTebie_fuzhuang() {
-        return tebie_fuzhuang;
-    }
-
-    public void setTebie_fuzhuang(float tebie_fuzhuang) {
-        this.tebie_fuzhuang = tebie_fuzhuang;
-    }
-
-    public float getZhongdian_fuzhuang() {
-        return zhongdian_fuzhuang;
-    }
-
-    public void setZhongdian_fuzhuang(float zhongdian_fuzhuang) {
-        this.zhongdian_fuzhuang = zhongdian_fuzhuang;
-    }
-
-    public float getYiban_fuzhuang() {
-        return yiban_fuzhuang;
-    }
-
-    public void setYiban_fuzhuang(float yiban_fuzhuang) {
-        this.yiban_fuzhuang = yiban_fuzhuang;
-    }
+//    public int getTebie() {
+//        return tebie;
+//    }
+//
+//    public void setTebie(int tebie) {
+//        this.tebie = tebie;
+//    }
+//
+//    public int getZhongdian() {
+//        return zhongdian;
+//    }
+//
+//    public void setZhongdian(int zhongdian) {
+//        this.zhongdian = zhongdian;
+//    }
+//
+//    public int getYiban() {
+//        return yiban;
+//    }
+//
+//    public void setYiban(int yiban) {
+//        this.yiban = yiban;
+//    }
+//
+//    public float getRiyong() {
+//        return riyong;
+//    }
+//
+//    public void setRiyong(float riyong) {
+//        this.riyong = riyong;
+//    }
+//
+//    public float getTebie_fuzhuang() {
+//        return tebie_fuzhuang;
+//    }
+//
+//    public void setTebie_fuzhuang(float tebie_fuzhuang) {
+//        this.tebie_fuzhuang = tebie_fuzhuang;
+//    }
+//
+//    public float getZhongdian_fuzhuang() {
+//        return zhongdian_fuzhuang;
+//    }
+//
+//    public void setZhongdian_fuzhuang(float zhongdian_fuzhuang) {
+//        this.zhongdian_fuzhuang = zhongdian_fuzhuang;
+//    }
+//
+//    public float getYiban_fuzhuang() {
+//        return yiban_fuzhuang;
+//    }
+//
+//    public void setYiban_fuzhuang(float yiban_fuzhuang) {
+//        this.yiban_fuzhuang = yiban_fuzhuang;
+//    }
 }
