@@ -1,16 +1,27 @@
 package com.bluemsun.web.admin;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.bluemsun.dto.GoodsDto;
 import com.bluemsun.entity.OrderRecord;
 import com.bluemsun.entity.Student;
 import com.bluemsun.service.OrderService;
+import com.bluemsun.service.RecordService;
 import com.bluemsun.service.UserService;
 import com.bluemsun.util.HttpRequestUtil;
+import com.bluemsun.util.JsonToExcelUtil;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +35,8 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    RecordService recordService;
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Map adminLogin(HttpServletRequest request,@RequestBody Map<String,String> reqMap){
@@ -199,6 +212,47 @@ public class AdminController {
             map.put("msg",e.getMessage());
             return map;
         }
+        return map;
+    }
+
+    @RequestMapping(value = "/getOrderRecordExcel",method = RequestMethod.POST)
+    public Map getOrderRecordExcel(HttpServletRequest request, HttpServletResponse response,
+                                    @RequestBody Map<String,String> reqMap) {
+        Map map = new HashMap();
+        HttpSession session = request.getSession();
+        String admin = (String) session.getAttribute("admin");
+        if (admin==null||!admin.equals("admin2020")){
+            map.put("code",1002);
+            map.put("msg","用户未登录");
+            return map;
+        }
+
+        try {
+            DateTime start = HttpRequestUtil.getDateTime(reqMap,"start");
+            DateTime end = HttpRequestUtil.getDateTime(reqMap,"end");
+            Integer campus = HttpRequestUtil.getInt(reqMap, "campus");
+            if (campus==-1){
+                campus=null;
+            }
+            List<GoodsDto> list = recordService.getOrderDetailByCreateTime(start, end, campus);
+            JSONArray jsonArray = JSONUtil.parseArray(JSONUtil.toJsonStr(list));
+            HSSFWorkbook sheets = JsonToExcelUtil.jsonToExcel(jsonArray);
+            //配置文件下载
+            response.setHeader("content-type", "application/octet-stream");
+            response.setContentType("application/octet-stream");
+            // 文件名拼接: start-end 只取到 月-日
+            String fileName = start.toString("MM-dd")+"_"+end.toString("MM-dd")+".xls";
+            System.out.println(fileName);
+            response.setHeader("Content-Disposition", "attachment;filename="+fileName);
+            OutputStream os = response.getOutputStream();
+            sheets.write(os);
+            sheets.close();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        map.put("msg","下载成功");
+        map.put("code",0);
         return map;
     }
 }

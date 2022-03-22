@@ -5,7 +5,6 @@ import com.bluemsun.entity.Student;
 import com.bluemsun.entity.StudentType;
 import com.bluemsun.service.UserService;
 import com.bluemsun.util.HttpRequestUtil;
-import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +21,8 @@ import java.util.Map;
 @CrossOrigin
 public class UserController {
 
-    private static Seller seller1 = new Seller(534,"净月售货员",2);
-    private static Seller seller2 = new Seller(533,"本部售货员",1);
+    private static Seller seller1 = new Seller(534,"净月售货员",1);
+    private static Seller seller2 = new Seller(533,"本部售货员",2);
 
     @Autowired
     private UserService userService;

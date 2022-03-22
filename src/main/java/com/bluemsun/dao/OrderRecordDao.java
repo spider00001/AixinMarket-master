@@ -1,8 +1,11 @@
 package com.bluemsun.dao;
 
+import cn.hutool.core.date.DateTime;
+import com.bluemsun.dto.GoodsDto;
 import com.bluemsun.entity.OrderDetail;
 import com.bluemsun.entity.OrderRecord;
 import org.apache.ibatis.annotations.Param;
+import org.w3c.dom.ls.LSInput;
 
 import java.util.Date;
 import java.util.List;
@@ -43,5 +46,8 @@ public interface OrderRecordDao {
     public Integer deleteOrder(int id);
     //删除一个订单详情
     public Integer deleteOrderDetail(int id);
+
+    //获取一定时间内的货物销售数量
+    public List<GoodsDto> getOrderDetailByCreateTime(@Param("start")DateTime start, @Param("end")DateTime end, @Param("campus") Integer campus);
 
 }

@@ -1,6 +1,9 @@
 package com.bluemsun.service.impl;
 
+import cn.hutool.core.date.DateTime;
+import com.bluemsun.dao.OrderRecordDao;
 import com.bluemsun.dao.RecordsDao;
+import com.bluemsun.dto.GoodsDto;
 import com.bluemsun.entity.InvestRecord;
 import com.bluemsun.entity.RetrievalRecord;
 import com.bluemsun.service.RecordService;
@@ -18,6 +21,8 @@ import java.util.List;
 public class RecordServiceImpl implements RecordService {
     @Autowired
     private RecordsDao recordsDao;
+    @Autowired
+    private OrderRecordDao orderRecordDao;
 
     private Logger logger = LoggerFactory.getLogger(RecordServiceImpl.class);
 
@@ -107,4 +112,16 @@ public class RecordServiceImpl implements RecordService {
         }
         return flag;
     }
+
+    @Override
+    public List<GoodsDto> getOrderDetailByCreateTime(DateTime start, DateTime end, Integer campus) {
+        List<GoodsDto> goodsDtoList = null;
+        try {
+            goodsDtoList = orderRecordDao.getOrderDetailByCreateTime(start,end,campus);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return goodsDtoList;
+    }
+
 }

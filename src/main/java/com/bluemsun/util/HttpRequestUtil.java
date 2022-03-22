@@ -1,5 +1,7 @@
 package com.bluemsun.util;
 
+import cn.hutool.core.date.DateTime;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -53,5 +55,17 @@ public class HttpRequestUtil {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static DateTime getDateTime(Map<String,String> request, String key) {
+        DateTime dateTime = null;
+        try {
+            if (request.get(key)!= null) {
+                dateTime = DateTime.of(request.get(key),"yyyy-MM-dd HH:mm");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dateTime;
     }
 }
