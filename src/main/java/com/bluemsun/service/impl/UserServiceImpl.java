@@ -5,6 +5,7 @@ import com.bluemsun.dao.RecordsDao;
 import com.bluemsun.dao.StudentDao;
 import com.bluemsun.entity.*;
 import com.bluemsun.service.UserService;
+import com.bluemsun.util.EncryptDecryptData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Student userLogin(String stuNum, String password) {
-        Student student = studentDao.getStudentByPassword(stuNum,password);
+        Student student = studentDao.getStudentByStuNum(stuNum);
         if (student == null) {
-            logger.info("密码错误或用户不存在");
-        } else logger.info("学生登录，学号："+stuNum+"姓名"+student.getName());
+            logger.info("用户不存在");
+        } else if(student.getPassword() == null) {//如果数据库里面学生密码为null，就把密码设置为学号
+            student.setPassword(EncryptDecryptData.encrypt(stuNum));
+            studentDao.updateStudent(student);
+            logger.info("学生登录，学号："+stuNum+"姓名"+student.getName());
+        }else if (password.equals(EncryptDecryptData.decrypt(student.getPassword()))){
+            logger.info("学生登录，学号："+stuNum+"姓名"+student.getName());
+            student.setPassword(null);
+        } else logger.info("密码错误");
         return student;
     }
 
@@ -62,7 +70,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Student getStudentByStuNum(String stuNum){
-        return studentDao.getStudentByStuNum(stuNum);
+        Student student = studentDao.getStudentByStuNum(stuNum);
+        student.setPassword(null);
+        return student;
     }
 
     //学生修改个人信息
@@ -79,6 +89,7 @@ public class UserServiceImpl implements UserService {
 //        }
 
         try{
+            if (student.getPassword() != null) student.setPassword(EncryptDecryptData.encrypt(student.getPassword()));
             studentDao.updateStudent(student);
         }catch (Exception e){
             logger.error("学生更新个人信息失败，学号为："+student.getStuNum()+"，姓名："+student.getName());
