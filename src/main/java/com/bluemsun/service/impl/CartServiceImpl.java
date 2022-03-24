@@ -24,18 +24,17 @@ import java.util.Map;
 
 @Service
 public class CartServiceImpl implements CartService {
+
     @Autowired
     GoodsDao goodsDao;
-
     @Autowired
     CartItemDao cartItemDao;
-
     private Logger logger = LoggerFactory.getLogger(CartServiceImpl.class);
 
     @Override
     @Transactional
     public Integer buildItem(GoodsItem goodsItem) {
-        int flag = 0;
+        int flag;
         Goods goods = goodsDao.getGoodByName(goodsItem.getGoodsName());
         try{
             if (goods == null){

@@ -24,7 +24,6 @@ public class JsonToExcelUtil {
         HSSFWorkbook wb = new HSSFWorkbook();
         // 创建HSSFSheet对象
         HSSFSheet sheet = wb.createSheet("sheet0");
-        String str = null;
         int roleNo = 0;
         int rowNo = 0;
         List<JSONObject> jsonObjects = jsonArray.toList(JSONObject.class);

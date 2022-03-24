@@ -187,7 +187,7 @@ public class OrderController {
             map.put("code",0);
         }catch (Exception e){
             map.put("code",2004);
-            map.put("msg",e.getMessage());
+            map.put("msg","订单删除出错");
             return map;
         }
         return map;

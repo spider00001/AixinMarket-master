@@ -26,17 +26,17 @@ public class UploadController {
 
         HttpSession session = request.getSession();
         String admin = (String) session.getAttribute("admin");
-        if (admin==null||!admin.equals("admin2020")){
+        if (admin==null||!admin.equals("admin2020")) {
             map.put("code",1002);
             map.put("msg","用户未登录");
             return map;
         }
 
         String realPath = request.getSession().getServletContext().getRealPath("/upload");
-        String projectServerPath = request.getScheme() + "://"+request.getServerName()+":" +
+        String projectServerPath =
+                request.getScheme() +
+                "://"+request.getServerName()+":" +
                 request.getServerPort() + request.getContextPath() + "/upload/";
-        //map.put("projectServerPath",projectServerPath);
-        //map.put("realPath",realPath);
         String filename = imgFile.getOriginalFilename();
         String extendFilename = filename.substring(filename.lastIndexOf('.'));
         String randomFilename = UUID.randomUUID().toString();
@@ -58,12 +58,6 @@ public class UploadController {
         Map data = new HashMap();
         data.put("filepath",projectServerPath+filename);
         map.put("data",data);
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            String jsonString = mapper.writeValueAsString(map);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
         return map;
     }
 }

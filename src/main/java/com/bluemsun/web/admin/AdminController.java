@@ -1,10 +1,8 @@
 package com.bluemsun.web.admin;
 
 import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSON;
 import com.bluemsun.dto.GoodsDto;
 import com.bluemsun.entity.OrderRecord;
 import com.bluemsun.entity.Student;
@@ -77,18 +75,9 @@ public class AdminController {
         int imburseType = HttpRequestUtil.getInt(reqMap,"imburseType");
         Float fuzhuang = HttpRequestUtil.getFloat(reqMap,"fuzhuang");
         Float riyong = HttpRequestUtil.getFloat(reqMap,"riyong");
-        Integer operator = HttpRequestUtil.getInt(reqMap, "operator");
-
-        if (imburseType==-1||(fuzhuang==null&&riyong==null) || operator==-1){
+        if (imburseType==-1||(fuzhuang==null&&riyong==null)){
             map.put("code",2001);
             map.put("msg","空数据");
-            return map;
-        }
-        //1为重置服装币，0为充值
-        if (operator == 1) {
-            userService.resetFuzhuang(fuzhuang, imburseType);
-            map.put("code",0);
-            map.put("msg","重置服装币成功");
             return map;
         }
         try{
@@ -103,10 +92,11 @@ public class AdminController {
                 }
             }
             map.put("code",0);
+            map.put("msg","充值成功");
             return map;
         }catch (Exception e){
             map.put("code",2004);
-            map.put("msg",e.getMessage());
+            map.put("msg","充值出错");
             return map;
         }
     }
@@ -121,7 +111,6 @@ public class AdminController {
             map.put("msg","用户未登录");
             return map;
         }
-
         Integer campus = HttpRequestUtil.getInt(reqMap,"campus");
         Integer state = HttpRequestUtil.getInt(reqMap,"state");
         String name = HttpRequestUtil.getString(reqMap,"name");
@@ -158,19 +147,9 @@ public class AdminController {
         }catch (Exception e){
             e.printStackTrace();
             map.put("code",2004);
-            map.put("msg",e.getMessage());
+            map.put("msg","订单查看出错");
             return map;
         }
-    }
-
-
-    /**
-    * 这个是用来干啥的我给忘了。。。
-    * */
-    @RequestMapping(value = "/orderDelete",method = RequestMethod.GET)
-    public Map deleteOrderRecord(HttpServletRequest request,@RequestParam Map<String,String> reqMap){
-        Map map = new HashMap();
-        return map;
     }
 
     @RequestMapping(value = "/studentEdit",method = RequestMethod.POST)
@@ -209,7 +188,7 @@ public class AdminController {
             map.put("code",0);
         }catch (Exception e){
             map.put("code",2004);
-            map.put("msg",e.getMessage());
+            map.put("msg","修改学生信息出错");
             return map;
         }
         return map;

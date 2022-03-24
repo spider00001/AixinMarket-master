@@ -152,8 +152,6 @@ public class WareHouseController {
         if (moneyType == -1) {
             moneyType = null;
         }
-        System.out.println("======== " + moneyType + " ========="+goodsType);
-
 
         Boolean priceRank = HttpRequestUtil.getBoolean(reqMap,"priceRank");
         WareHouse wareHouse = new WareHouse();

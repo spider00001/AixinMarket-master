@@ -22,14 +22,13 @@ public class InvestAndRetrievalController {
 
     @Autowired
     private RecordService recordService;
+//    @RequestMapping(value = "/invest",method = RequestMethod.GET)
+//    public Map getInvestRecord(){
+//        Map map = new HashMap();
+//        return map;
+//    }
 
-
-    @RequestMapping(value = "/invest",method = RequestMethod.GET)
-    public Map getInvestRecord(){
-        Map map = new HashMap();
-        return map;
-    }
-
+    //获取进货记录
     @RequestMapping(value = "/retrieval",method = RequestMethod.GET)
     public Map getRetrievalRecord(HttpServletRequest request,@RequestParam Map<String,String> reqMap){
         Map map = new HashMap();
@@ -55,7 +54,7 @@ public class InvestAndRetrievalController {
         Integer total = recordService.getRetrievalRecordCount(retrievalRecord);
         if (recordList==null||total==null){
             map.put("code",2004);
-            map.put("msg","修改失败");
+                map.put("msg","无符合条件的记录");
         }else {
             map.put("code",0);
             data.put("recordList",recordList);
@@ -66,7 +65,7 @@ public class InvestAndRetrievalController {
     }
 
     @RequestMapping(value = "/retrievalDelete",method = RequestMethod.POST)
-    public Map doDeleteWareHouse(HttpServletRequest request,@RequestBody Map<String,String> reqMap){
+    public Map doDeleteWareHouse(@RequestBody Map<String,String> reqMap){
         Map map = new HashMap();
         int retrievalId = HttpRequestUtil.getInt(reqMap,"retrievalId");
         if (retrievalId==-1){
@@ -79,7 +78,7 @@ public class InvestAndRetrievalController {
             map.put("code",0);
         }catch (Exception e){
             map.put("code",2004);
-            map.put("msg",e.getMessage());
+            map.put("msg","删除进货记录出错");
             return map;
         }
         return map;

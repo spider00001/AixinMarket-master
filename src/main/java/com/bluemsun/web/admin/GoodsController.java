@@ -4,7 +4,6 @@ import com.bluemsun.entity.Goods;
 import com.bluemsun.service.GoodsService;
 
 import com.bluemsun.util.HttpRequestUtil;
-import com.bluemsun.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +22,8 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+
+    //增加商品
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     public Map addGoods(HttpServletRequest request, @RequestBody Goods goods){
         Map map = new HashMap();
@@ -43,19 +44,21 @@ public class GoodsController {
             try{
                 goodsService.addGoods(goods);
                 map.put("code",0);
-
             }catch (Exception e){
                 map.put("code",2004);
-                map.put("msg",e.getMessage());
+                map.put("msg","增加商品出错");
                 return map;
             }
         }else {
             map.put("code",2005);
-            map.put("msg","有同名商品");
+            map.put("msg","有同名或同条形码商品");
         }
         return map;
 
     }
+
+
+    //获取商品名称映射表
     @RequestMapping(value = "/name",method = RequestMethod.GET)
     public Map getGoodsName(HttpServletRequest request){
         Map map = new HashMap();
@@ -80,10 +83,12 @@ public class GoodsController {
         }
         return map;
     }
-    @RequestMapping(value = "/type",method = RequestMethod.GET)
-    public Map getGoodsType(HttpServletRequest request){
-        Map map = new HashMap();
 
+
+    //获取商品种类
+    @RequestMapping(value = "/type",method = RequestMethod.GET)
+    public Map getGoodsType(){
+        Map map = new HashMap();
         List goodsTypeList = goodsService.getTypeMapper();
         if (goodsTypeList==null){
             map.put("code",2001);
@@ -96,6 +101,9 @@ public class GoodsController {
         }
         return map;
     }
+
+
+    //增加商品种类
     @RequestMapping(value = "/addtype",method = RequestMethod.GET)
     public Map addGoodsType(HttpServletRequest request,@RequestParam Map<String,String> reqMap){
         Map map = new HashMap();
@@ -123,6 +131,9 @@ public class GoodsController {
 
         return map;
     }
+
+
+    //删除商品
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public Map deleteGoods(HttpServletRequest request,@RequestBody Map<String,String> reqMap){
         Map map = new HashMap();
@@ -149,6 +160,9 @@ public class GoodsController {
         }
         return map;
     }
+
+
+    //更新商品信息
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public Map updateGoods(HttpServletRequest request, @RequestBody Goods goods){
         Map map = new HashMap();
@@ -186,10 +200,29 @@ public class GoodsController {
         }
         return map;
     }
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public Map getGoodsList(HttpServletRequest request,@RequestParam Map<String,String> reqMap){
-        Map map = new HashMap();
 
+
+    //查看商品详情
+    @RequestMapping(value = "/byid",method = RequestMethod.GET)
+    public Map getGoodById(@RequestParam("goodId") Integer goodId){
+        Map map = new HashMap();
+        if (goodId == null) {
+            map.put("code",1004);
+            map.put("msg","数据为空");
+            return map;
+        }
+        Goods goods = goodsService.getAGoods(goodId);
+        map.put("code",0);
+        Map data = new HashMap();
+        data.put("goods",goods);
+        map.put("data",data);
+        return map;
+    }
+
+    //获取商品list
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    public Map getGoodsList(HttpServletRequest request, @RequestParam Map<String,String> reqMap){
+        Map map = new HashMap();
         HttpSession session = request.getSession();
         String admin = (String) session.getAttribute("admin");
         if (admin==null||!admin.equals("admin2020")){
@@ -226,7 +259,7 @@ public class GoodsController {
         Integer totalCount = goodsService.getGoodsCount(goods,highPrice,lowPrice);
         if (goodsList==null||totalCount==null){
             map.put("code",2001);
-            map.put("msg","数据为空");
+            map.put("msg","没有符合条件的商品");
         }else {
             map.put("code",0);
             Map data = new HashMap();
@@ -236,21 +269,5 @@ public class GoodsController {
         }
         return map;
     }
-    @RequestMapping(value = "/byid",method = RequestMethod.GET)
-    public Map getGoodById(HttpServletRequest request,@RequestParam("goodId") Integer goodId){
-        Map map = new HashMap();
-        if (goodId == null) {
-            map.put("code",1004);
-            map.put("msg","数据为空");
-            return map;
-        }
-        Goods goods = goodsService.getAGoods(goodId);
-        Map data = new HashMap();
-        data.put("goods",goods);
-        map.put("code",0);
-        map.put("data",data);
-        return map;
-    }
-
 
 }
