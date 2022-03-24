@@ -105,10 +105,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Boolean changePassword(Student student, String newPassword,String originPassword) {
         Student s = studentDao.getStudentById(student.getId());
-        if (s.getPassword().equals(newPassword)||!s.getPassword().equals(originPassword)){
+        String encrypO = EncryptDecryptData.encrypt(originPassword);
+        String encryptN = EncryptDecryptData.encrypt(newPassword);
+        if (s.getPassword().equals(encryptN)||!s.getPassword().equals(encrypO)){
             return false;
         }
-        student.setPassword(newPassword);
+        student.setPassword(encryptN);
         try{
             studentDao.updateStudent(student);
         }catch (Exception e){

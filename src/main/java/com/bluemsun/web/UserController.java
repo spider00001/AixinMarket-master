@@ -64,19 +64,25 @@ public class UserController {
             resMap.put("msg","密码错误或用户不存在");
             return resMap;
         }else {
-            if (student.getContact()==null){
-                session.setAttribute("flag",student);
-                resMap.put("code",1001);
-                resMap.put("msg","第一次登录");
-                return resMap;
-            }else{
-                session.setAttribute("student",student);
-                resMap.put("code",0);
-                data.put("power",1);
-                data.put("student",student);
-                resMap.put("data",data);
-                return resMap;
-            }
+            session.setAttribute("student",student);
+            resMap.put("code",0);
+            data.put("power",1);
+            data.put("student",student);
+            resMap.put("data",data);
+            return resMap;
+//            if (student.getContact()==null){
+//                session.setAttribute("flag",student);
+//                resMap.put("code",1001);
+//                resMap.put("msg","第一次登录");
+//                return resMap;
+//            }else{
+//                session.setAttribute("student",student);
+//                resMap.put("code",0);
+//                data.put("power",1);
+//                data.put("student",student);
+//                resMap.put("data",data);
+//                return resMap;
+//            }
         }
     }
 
@@ -259,13 +265,18 @@ public class UserController {
             return resMap;
         }
 
-
         Map data = new HashMap();
         int pageNum = HttpRequestUtil.getInt(reqMap,"currentPage");
         int pageSize = HttpRequestUtil.getInt(reqMap,"pageSize");
         String stuNum = HttpRequestUtil.getString(reqMap,"stuNum");
         String name = HttpRequestUtil.getString(reqMap,"name");
-        String grade = HttpRequestUtil.getString(reqMap,"grade");
+        int grade = HttpRequestUtil.getInt(reqMap,"grade");
+        switch (grade) {
+            case 1 : grade = 2021;break;
+            case 2 : grade = 2020;break;
+            case 3 : grade = 2019;break;
+            case 4 : grade = 2018;break;
+        }
         int departmentId = HttpRequestUtil.getInt(reqMap,"departmentId");
         int specialId = HttpRequestUtil.getInt(reqMap,"specialId");
         int imburseType = HttpRequestUtil.getInt(reqMap,"imburseType");

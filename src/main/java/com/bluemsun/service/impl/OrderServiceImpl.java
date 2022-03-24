@@ -124,11 +124,14 @@ public class OrderServiceImpl implements OrderService {
             if (wareHouse.getNum()<detail.getOrderNum()){
                 return 4;//库存不足
             }
+            //货物库存减少
+            wareHouse.setNum(wareHouse.getNum() - detail.getOrderNum());
+            wareHouseDao.updateWareHouseById(wareHouse);
+
             orderDetail.setOrderNum(detail.getOrderNum());
             orderDetail.setGoods(g);
             orderDetailList.add(orderDetail);
         }
-        //都通过后插入数据库，学生减少一定的代币
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setStatus(status);
         orderRecord.setCampus(orderRecordDto.isCampus());
@@ -137,14 +140,10 @@ public class OrderServiceImpl implements OrderService {
         orderRecord.setTotalFuzhuang(orderRecordDto.getTotalFuzhuang());
         orderRecord.setTotalRiyong(orderRecordDto.getTotalRiyong());
         orderRecord.setOrderDetailList(orderDetailList);
+
         try{
-            //学生减少一定量的代币
-//            float balance = student.getBalanceFuzhuang();
-//            balance = balance - (float) orderRecordDto.getTotalFuzhuang();
-//            student.setBalanceFuzhuang(balance);
+            //学生减少一定的代币
             student.setBalanceFuzhuang(student.getBalanceFuzhuang() - orderRecordDto.getTotalFuzhuang());
-//            balance = balance - (float) orderRecordDto.getTotalRiyong();
-//            student.setBalanceRiyong(balance);
             student.setBalanceRiyong(student.getBalanceRiyong() - orderRecordDto.getTotalRiyong());
             studentDao.updateStudent(student);
             orderRecordDao.insertOrder(orderRecord);
@@ -317,7 +316,9 @@ public class OrderServiceImpl implements OrderService {
         try{
             OrderRecord orderRecord = orderRecordDao.selectOrderById(oid);
             Student student = studentDao.getStudentById(uid);
-            student.setBalanceRiyong((student.getBalanceRiyong() + orderRecord.getTotalRiyong())%20);
+            //因为日用币最大限额为20
+            Float balanceRiyong = (student.getBalanceRiyong() + orderRecord.getTotalRiyong()) >= 20 ? 20 : student.getBalanceRiyong() + orderRecord.getTotalRiyong();
+            student.setBalanceRiyong(balanceRiyong);
             student.setBalanceFuzhuang(student.getBalanceFuzhuang() + orderRecord.getTotalFuzhuang());
             studentDao.updateStudent(student);
             HttpSession session = request.getSession();

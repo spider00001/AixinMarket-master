@@ -132,8 +132,6 @@ public class WareHouseServiceImpl implements WareHouseService {
             throw new RuntimeException("修改仓库信息时出错："+e.getMessage());
         }
         logger.info("修改仓库信息，id为："+wareHouse.getId()+
-                "，商品id为："+wareHouse.getGoods().getId()+
-                "，校区为："+wareHouse.getCampus()+
                 "，数量为："+wareHouse.getNum());
         return flag;
     }

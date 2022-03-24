@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,12 +195,16 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/getOrderRecordExcel",method = RequestMethod.POST)
-    public void getOrderRecordExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map reqMap) {
+    public void getOrderRecordExcel(HttpServletRequest request, HttpServletResponse response,
+                                   @RequestBody Map<String,String> reqMap) {
         try {
             DateTime start = HttpRequestUtil.getDateTime(reqMap,"start");
             DateTime end = HttpRequestUtil.getDateTime(reqMap,"end");
             Integer campus = HttpRequestUtil.getInt(reqMap, "campus");
-            List<GoodsDto> list = recordService.getOrderDetailByCreateTime(start,end,campus);
+            if (campus==-1){
+                campus=null;
+            }
+            List<GoodsDto> list = recordService.getOrderDetailByCreateTime(start, end, campus);
             JSONArray jsonArray = JSONUtil.parseArray(JSONUtil.toJsonStr(list));
             HSSFWorkbook sheets = JsonToExcelUtil.jsonToExcel(jsonArray);
             //配置文件下载

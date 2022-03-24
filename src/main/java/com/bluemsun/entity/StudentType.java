@@ -6,7 +6,7 @@ public class StudentType {
     private String stuNum;
     private String name;
     private Integer state;
-    private String grade;
+    private int grade;
     private Integer imburseType;
 
 
@@ -50,19 +50,19 @@ public class StudentType {
         this.state = state;
     }
 
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
     public Integer getImburseType() {
         return imburseType;
     }
 
     public void setImburseType(Integer imburseType) {
         this.imburseType = imburseType;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 }

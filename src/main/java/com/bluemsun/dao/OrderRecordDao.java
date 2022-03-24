@@ -48,6 +48,6 @@ public interface OrderRecordDao {
     public Integer deleteOrderDetail(int id);
 
     //获取一定时间内的货物销售数量
-    public List<GoodsDto> getOrderDetailByCreateTime(@Param("start")Date start, @Param("end")Date end, @Param("campus") Integer campus);
+    public List<GoodsDto> getOrderDetailByCreateTime(@Param("start")DateTime start, @Param("end")DateTime end, @Param("campus") Integer campus);
 
 }
