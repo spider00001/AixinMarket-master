@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bluemsun.dao.StudentDao">
+    <resultMap id="studentMap" type="com.bluemsun.entity.Student">
+        <id column="id" property="id"/>
+        <result column="stuNum" property="stuNum"/>
+        <result column="balance_fuzhuang" property="balanceFuzhuang"/>
+        <result column="balance_riyong" property="balanceRiyong"/>
+        <result column="contact" property="contact"/>
+        <result column="departmentName" property="departmentName"/>
+        <result column="imburseTypeName" property="imburseTypeName"/>
+        <result column="grade" property="grade"/>
+        <result column="name" property="name"/>
+        <result column="specialName" property="specialName"/>
+        <result column="campus" property="campus"/>
+        <result column="password" property="password"/>
+    </resultMap>
+    <update id="updateStudent" parameterType="com.bluemsun.entity.Student">
+        UPDATE aixin_student
+        <set>
+            <if test="student.password != null">password = #{student.password},</if>
+            <if test="student.contact != null">contact = #{student.contact},</if>
+            <if test="student.campus != null">campus = #{student.campus},</if>
+            <if test="student.balanceRiyong != null">balance_riyong = #{student.balanceRiyong},</if>
+            <if test="student.balanceFuzhuang != null">balance_fuzhuang = #{student.balanceFuzhuang},</if>
+        </set>
+        WHERE id = #{student.id}
+    </update>
+    <update id="updateBalance">
+        UPDATE aixin_student,
+               info_student
+        <set>
+            <if test="student.balanceRiyong != null">aixin_student.balance_riyong = #{student.balanceRiyong},</if>
+            <if test="student.balanceFuzhuang != null">aixin_student.balance_fuzhuang = aixin_student.balance_fuzhuang + #{student.balanceFuzhuang},</if>
+        </set>
+        WHERE aixin_student.info_student_id = info_student.id
+        and info_student.imburseType = #{imburseType}
+    </update>
+
+    <update id="resetBalance">
+        UPDATE aixin_student,
+        info_student
+        <set>
+            <if test="student.balanceRiyong != null">aixin_student.balance_riyong = #{student.balanceRiyong},</if>
+            <if test="student.balanceFuzhuang != null">aixin_student.balance_fuzhuang = #{student.balanceFuzhuang},</if>
+        </set>
+        WHERE aixin_student.info_student_id = info_student.id
+        and info_student.imburseType = #{imburseType}
+    </update>
+
+    <select id="getStudentByPassword" resultMap="studentMap">
+        SELECT  student.id,
+                student.balance_riyong,
+                student.balance_fuzhuang,
+                student.contact,
+                student.campus,
+                info.name,
+                info.grade,
+                info.stuNum,
+                department.departmentName,
+                imbursetype.imburseTypeName,
+                special.specialName
+        FROM aixin_student student,
+             info_student info,
+             param_department department,
+             param_imburseType imbursetype,
+             param_special special
+        WHERE student.info_student_id=info.id
+              and info.departmentId=department.id
+              and info.specialNum=special.id
+              and info.imburseType=imbursetype.id
+              and info.stuNum=#{studentNum}
+              and student.password=#{password}
+    </select>
+    <select id="getStudentById" resultMap="studentMap">
+        SELECT  student.id,
+                student.balance_riyong,
+                student.balance_fuzhuang,
+                student.contact,
+                student.campus,
+                student.password,
+                info.name,
+                info.grade,
+                info.stuNum,
+                department.departmentName,
+                imbursetype.imburseTypeName,
+                special.specialName
+        FROM aixin_student student,
+             info_student info,
+             param_department department,
+             param_imburseType imbursetype,
+             param_special special
+        WHERE student.info_student_id=info.id
+              and info.departmentId=department.id
+              and info.specialNum=special.id
+              and info.imburseType=imbursetype.id
+              and student.id = #{id}
+    </select>
+
+    <select id="getStudentByStuNum" resultMap="studentMap" parameterType="string">
+        SELECT  student.id,
+                student.balance_riyong,
+                student.balance_fuzhuang,
+                student.contact,
+                student.campus,
+                student.password,
+                info.name,
+                info.grade,
+                info.stuNum,
+                department.departmentName,
+                imbursetype.imburseTypeName,
+                special.specialName
+        FROM aixin_student student,
+             info_student info,
+             param_department department,
+             param_imburseType imbursetype,
+             param_special special
+        WHERE student.info_student_id=info.id
+              and info.departmentId=department.id
+              and info.specialNum=special.id
+              and info.imburseType=imbursetype.id
+              and info.stuNum = #{stuNum}
+    </select>
+    <select id="getStudentList" parameterType="com.bluemsun.entity.StudentType" resultMap="studentMap">
+    SELECT  student.id,
+                student.balance_riyong,
+                student.balance_fuzhuang,
+                student.contact,
+                student.campus,
+                info.name,
+                info.grade,
+                info.stuNum,
+                department.departmentName,
+                imbursetype.imburseTypeName,
+                special.specialName
+        FROM aixin_student student,
+             info_student info,
+             param_department department,
+        param_imburseType imbursetype,
+             param_special special
+        <where> student.info_student_id=info.id
+              and info.departmentId=department.id
+              and info.specialNum=special.id
+              and info.imburseType=imbursetype.id
+              <if test="studentType.departmentId != null">and info.departmentId = #{studentType.departmentId}</if>
+              <if test="studentType.specialId != null">and info.specialNum = #{studentType.specialId}</if>
+              <if test="studentType.stuNum != null">and info.stuNum = #{studentType.stuNum}</if>
+              <if test="studentType.name != null">and info.name = #{studentType.name}</if>
+              <if test="studentType.state != null">and info.state = #{studentType.state}</if>
+              <if test="studentType.grade != null">and info.grade = #{studentType.grade}</if>
+              <if test="studentType.imburseType != null">and info.imburseType = #{studentType.imburseType}</if>
+        </where>
+        LIMIT #{pageIndex},#{pageSize}
+    </select>
+    <select id="getStudentCount" resultType="int">
+        SELECT  count(1)
+        FROM aixin_student student,
+        info_student info,
+        param_department department,
+        param_imburseType imbursetype,
+        param_special special
+        <where> student.info_student_id=info.id
+            and info.departmentId=department.id
+            and info.specialNum=special.id
+            and info.imburseType=imbursetype.id
+            <if test="studentType.departmentId != null">and info.departmentId = #{studentType.departmentId}</if>
+            <if test="studentType.specialId != null">and info.specialNum = #{studentType.specialId}</if>
+            <if test="studentType.stuNum != null">and info.stuNum = #{studentType.stuNum}</if>
+            <if test="studentType.name != null">and info.name = #{studentType.name}</if>
+            <if test="studentType.state != null">and info.state = #{studentType.state}</if>
+            <if test="studentType.grade != null">and info.grade = #{studentType.grade}</if>
+            <if test="studentType.imburseType != null">and info.imburseType = #{studentType.imburseType}</if>
+        </where>
+    </select>
+    <select id="getStudentByInfoStudentId" resultType="com.bluemsun.entity.Student">
+        SELECT  student.id,
+                student.balance_riyong,
+                student.balance_fuzhuang,
+                student.contact,
+                student.campus,
+                student.password,
+                info.name,
+                info.grade,
+                info.stuNum,
+                department.departmentName,
+                imbursetype.imburseTypeName,
+                special.specialName
+        FROM aixin_student student,
+             info_student info,
+             param_department department,
+             param_imburseType imbursetype,
+             param_special special
+        WHERE student.info_student_id = #{id}
+          and info.departmentId=department.id
+          and info.specialNum=special.id
+          and info.imburseType=imbursetype.id
+          and student.info_student_id=info.id
+    </select>
+</mapper>

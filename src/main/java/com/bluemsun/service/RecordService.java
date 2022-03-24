@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateTime;
 import com.bluemsun.dto.GoodsDto;
 import com.bluemsun.entity.InvestRecord;
 import com.bluemsun.entity.RetrievalRecord;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,4 +18,5 @@ public interface RecordService {
     public Integer getRetrievalRecordCount(RetrievalRecord retrievalRecord);
     public Integer getInvestRecordCount(InvestRecord investRecord);
     public List<GoodsDto> getOrderDetailByCreateTime(DateTime start, DateTime end, Integer campus);
+
 }

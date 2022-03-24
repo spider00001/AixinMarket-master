@@ -1,7 +1,7 @@
 package com.bluemsun.web.admin;
 
-import cn.hutool.json.JSONArray;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.bluemsun.dto.GoodsDto;
 import com.bluemsun.entity.OrderRecord;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -195,25 +196,12 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/getOrderRecordExcel",method = RequestMethod.POST)
-    public Map getOrderRecordExcel(HttpServletRequest request, HttpServletResponse response,
-                                    @RequestBody Map<String,String> reqMap) {
-        Map map = new HashMap();
-        HttpSession session = request.getSession();
-        String admin = (String) session.getAttribute("admin");
-        if (admin==null||!admin.equals("admin2020")){
-            map.put("code",1002);
-            map.put("msg","用户未登录");
-            return map;
-        }
-
+    public void getOrderRecordExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map reqMap) {
         try {
             DateTime start = HttpRequestUtil.getDateTime(reqMap,"start");
             DateTime end = HttpRequestUtil.getDateTime(reqMap,"end");
             Integer campus = HttpRequestUtil.getInt(reqMap, "campus");
-            if (campus==-1){
-                campus=null;
-            }
-            List<GoodsDto> list = recordService.getOrderDetailByCreateTime(start, end, campus);
+            List<GoodsDto> list = recordService.getOrderDetailByCreateTime(start,end,campus);
             JSONArray jsonArray = JSONUtil.parseArray(JSONUtil.toJsonStr(list));
             HSSFWorkbook sheets = JsonToExcelUtil.jsonToExcel(jsonArray);
             //配置文件下载
@@ -230,8 +218,5 @@ public class AdminController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        map.put("msg","下载成功");
-        map.put("code",0);
-        return map;
     }
 }

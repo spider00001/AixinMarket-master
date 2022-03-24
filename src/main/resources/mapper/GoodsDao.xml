@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bluemsun.dao.GoodsDao">
+    <resultMap id="goodsMap" type="com.bluemsun.entity.Goods">
+        <id property="id" column="id"/>
+        <result column="barcode" property="barcode"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="goods_type" property="goodsType"/>
+        <result column="classification" property="goodsTypeName"/>
+        <result column="images" property="images"/>
+        <result column="limit_buy_num" property="limitBuyNum"/>
+        <result column="limit_buy_type" property="limitBuyType"/>
+        <result column="money_type" property="moneyType"/>
+        <result column="price" property="price"/>
+        <result column="specs" property="specs"/>
+    </resultMap>
+    <insert id="insertGoods" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO aixin_goods (barcode,goods_name,specs,money_type,goods_type,price,limit_buy_num,limit_buy_type,images)
+        VALUES (#{barcode},#{goodsName},#{specs},#{moneyType},#{goodsType},#{price},#{limitBuyNum},#{limitBuyType},#{images})
+    </insert>
+    <update id="updateGoods">
+        UPDATE aixin_goods
+        <set>
+            <if test="goods.goodsName != null">goods_name = #{goods.goodsName},</if>
+            <if test="goods.specs != null">specs = #{goods.specs},</if>
+            <if test="goods.goodsType != null">goods_type = #{goods.goodsType},</if>
+            <if test="goods.images != null">images = #{goods.images},</if>
+            <if test="goods.moneyType != null">money_type = #{goods.moneyType},</if>
+            <if test="goods.price != null">price = #{goods.price},</if>
+            <if test="goods.limitBuyNum != null">limit_buy_num = #{goods.limitBuyNum},</if>
+            limit_buy_type = #{goods.limitBuyType}
+        </set>
+        WHERE id=#{goods.id}
+    </update>
+    <select id="getGoodList" resultMap="goodsMap">
+        SELECT g.id,
+               g.barcode,
+               g.goods_name,
+               g.specs,
+               g.money_type,
+               g.goods_type,
+               t.classification,
+               g.price,
+               g.limit_buy_num,
+               g.limit_buy_type,
+               g.images
+        FROM aixin_goods g left join
+             aixin_goods_type t on g.goods_type = t.id
+        <where>
+
+            <if test="goods.moneyType != null">AND g.money_type = #{goods.moneyType}</if>
+            <if test="goods.goodsType != null">AND g.goods_type = #{goods.goodsType}</if>
+            <if test="goods.barcode != null">AND g.barcode = #{goods.barcode}</if>
+            <if test="goods.goodsName != null">AND g.goods_name LIKE concat('%',#{goods.goodsName}, '%')</if>
+            <if test="highPrice != null">AND price <![CDATA[ <= ]]> #{highPrice} </if>
+            <if test="lowPrice != null">AND price <![CDATA[ >= ]]> #{lowPrice} </if>
+        </where>
+        LIMIT #{pageIndex},#{pageSize}
+    </select>
+    <select id="getGoodCount" resultType="int">
+        SELECT COUNT(1)
+        FROM aixin_goods g left join
+        aixin_goods_type t on g.goods_type = t.id
+        <where>
+            <if test="goods.moneyType != null">AND g.money_type = #{goods.moneyType}</if>
+            <if test="goods.goodsType != null">AND g.goods_type = #{goods.goodsType}</if>
+            <if test="goods.barcode != null">AND g.barcode = #{goods.barcode}</if>
+            <if test="goods.goodsName != null">AND g.goods_name LIKE concat('%',#{goods.goodsName}, '%')</if>
+            <if test="highPrice != null">AND price <![CDATA[ <= ]]> #{highPrice} </if>
+            <if test="lowPrice != null">AND price <![CDATA[ >= ]]> #{lowPrice} </if>
+        </where>
+    </select>
+    <select id="getGoodById" parameterType="int" resultMap="goodsMap">
+        SELECT g.id,
+               g.barcode,
+               g.goods_name,
+               g.specs,
+               g.money_type,
+               g.goods_type,
+               t.classification,
+               g.price,
+               g.limit_buy_num,
+               g.limit_buy_type,
+               g.images
+        FROM aixin_goods g left join
+             aixin_goods_type t on g.goods_type = t.id
+        WHERE  g.id = #{id}
+    </select>
+    <select id="getGoodByBarcode" resultMap="goodsMap">
+        SELECT g.id,
+               g.barcode,
+               g.goods_name,
+               g.specs,
+               g.money_type,
+               g.goods_type,
+               t.classification,
+               g.price,
+               g.limit_buy_num,
+               g.limit_buy_type,
+               g.images
+        FROM aixin_goods g left join
+             aixin_goods_type t on g.goods_type = t.id
+        WHERE  g.barcode = #{barcode}
+    </select>
+    <select id="getGoodByName" resultMap="goodsMap">
+        SELECT g.id,
+               g.barcode,
+               g.goods_name,
+               g.specs,
+               g.money_type,
+               g.goods_type,
+               t.classification,
+               g.price,
+               g.limit_buy_num,
+               g.limit_buy_type,
+               g.images
+        FROM aixin_goods g left join
+             aixin_goods_type t on g.goods_type = t.id
+        WHERE  g.goods_name = #{name}
+    </select>
+    <delete id="deleteGoods">
+        DELETE FROM aixin_goods
+        WHERE id=#{id}
+    </delete>
+
+
+</mapper>

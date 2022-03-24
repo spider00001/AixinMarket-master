@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bluemsun.dao.CartItemDao">
+    <resultMap id="goodsItemMap" type="com.bluemsun.dto.CartItemDto">
+        <id property="id" column="id"/>
+        <result column="goods_num" property="goodsNum"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="price" property="goodsPrice"/>
+        <result column="stu_name" property="stuNum"/>
+        <result column="images" property="imgs"/>
+        <result column="money_type" property="moneyType"/>
+    </resultMap>
+    <insert id="insertItem" parameterType="com.bluemsun.dto.CartItemDto">
+        INSERT INTO stu_cart (stu_name,stu_id,goods_name,goods_num)
+        VALUES (#{stuNum},#{goodsItem.stuId},#{goodsName},#{goodsNum})
+    </insert>
+    <update id="changeItem" parameterType="com.bluemsun.dto.CartItemDto">
+        UPDATE stu_cart
+        <set>
+            <if test="goodsItem.goodsNum != null">goods_num = #{goodsItem.goodsNum}</if>
+        </set>
+        <where>
+            goods_name = #{goodsItem.goodsName} and stu_id = #{goodsItem.stuId}
+        </where>
+    </update>
+    <select id="getItems" parameterType="com.bluemsun.dto.CartItemDto" resultMap="goodsItemMap">
+        SELECT DISTINCT g.price,g.images,g.money_type,g.goods_name,g.id FROM aixin_goods g where g.goods_name in (SELECT stu_cart.goods_name from stu_cart WHERE stu_cart.stu_id = #{goodsItem.stuId})
+    </select>
+    <delete id="deleteItem" parameterType="com.bluemsun.dto.CartItemDto">
+        DELETE  FROM  stu_cart
+        <where>
+            <if test="goodsItem.goodsName != null">goods_name = #{goodsItem.goodsName} and</if>
+            <if test="goodsItem.stuId != null"> stu_id = #{goodsItem.stuId}</if>
+        </where>
+    </delete>
+    <select id="countItems" parameterType="com.bluemsun.dto.CartItemDto" resultType="java.lang.Integer">
+        SELECT COUNT(*) from stu_cart where stu_id = #{goodsItem.stuId}
+    </select>
+    <select id="getItem" parameterType="com.bluemsun.dto.CartItemDto" resultMap="goodsItemMap">
+        select * from stu_cart
+        <where>
+            <if test="goodsItem.goodsName != null">goods_name = #{goodsItem.goodsName}</if>
+            <if test="goodsItem.stuId != null"> and stu_id = #{goodsItem.stuId}</if>
+        </where>
+    </select>
+</mapper>
