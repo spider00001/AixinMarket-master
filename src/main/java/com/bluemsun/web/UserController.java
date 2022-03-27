@@ -285,8 +285,12 @@ public class UserController {
         //组装studentType
         StudentType studentType = new StudentType();
         studentType.setStuNum(stuNum);
-        studentType.setGrade(grade);
         studentType.setName(name);
+        if (grade != -1) {
+            studentType.setGrade(grade);
+        } else {
+            studentType.setGrade(null);
+        }
         if (departmentId!=-1){
             studentType.setDepartmentId(departmentId);
         }else {
@@ -308,6 +312,8 @@ public class UserController {
             studentType.setState(null);
         }
         //studentType组装完成
+
+        System.out.println("==========="+studentType+"=====");
 
         //从数据库中取出指定学生
         List<Student> studentList = userService.getStudentList(studentType,pageNum,pageSize);

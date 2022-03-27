@@ -149,26 +149,26 @@ public class UserServiceImpl implements UserService {
         return studentDao.getStudentCount(studentType);
     }
 
-    //每月更新日用币
-    @Override
-    @Transactional
-//    @Scheduled(cron = "0 0 0 1 * ? *")
-    public void updateBalanceRiyong() {
-        chargeRiyong(riyong,tebie);
-        chargeRiyong(riyong,zhongdian);
-        chargeRiyong(riyong,yiban);
-    }
+//    //每月更新日用币
+//    @Override
+//    @Transactional
+////    @Scheduled(cron = "0 0 0 1 * ? *")
+//    public void updateBalanceRiyong() {
+//        chargeRiyong(riyong,tebie);
+//        chargeRiyong(riyong,zhongdian);
+//        chargeRiyong(riyong,yiban);
+//    }
 
 
     //每学期更新服装币
-    @Override
-    @Transactional
-//    @Scheduled(cron = "0 0 0 1 3,9 ? ")
-    public void updateBalanceFuzhuang() {
-        resetFuzhuang(tebie_fuzhuang,tebie);
-        resetFuzhuang(zhongdian_fuzhuang,zhongdian);
-        resetFuzhuang(yiban_fuzhuang,yiban);
-    }
+//    @Override
+//    @Transactional
+////    @Scheduled(cron = "0 0 0 1 3,9 ? ")
+//    public void updateBalanceFuzhuang() {
+//        resetFuzhuang(tebie_fuzhuang,tebie);
+//        resetFuzhuang(zhongdian_fuzhuang,zhongdian);
+//        resetFuzhuang(yiban_fuzhuang,yiban);
+//    }
 
     //充值服装币
     @Override
@@ -215,28 +215,28 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    //每学期重置服装币
-    @Override
-    @Transactional
-    public void resetFuzhuang(float fuzhuang,int imburseType){
-        Student student = new Student();
-        InvestRecord investRecord = new InvestRecord();
-        investRecord.setBalanceRiyong(0f);
-        investRecord.setCreateTime(new Date());
-        student.setBalanceFuzhuang(fuzhuang);
-        investRecord.setImburseType(imburseType);
-        investRecord.setBalanceFuzhuang(fuzhuang);
-        try{
-//            studentDao
-            studentDao.resetBalance(student,imburseType);
-            recordsDao.insertInvestRecord(investRecord);
-        }catch (Exception e){
-            e.printStackTrace();
-            logger.error("重置服装币出错,错误信息为："+e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
-        logger.info("重置服装币，重置金额为："+fuzhuang+"，资助类型为："+imburseType);
-    }
+//    //每学期重置服装币
+//    @Override
+//    @Transactional
+//    public void resetFuzhuang(float fuzhuang,int imburseType){
+//        Student student = new Student();
+//        InvestRecord investRecord = new InvestRecord();
+//        investRecord.setBalanceRiyong(0f);
+//        investRecord.setCreateTime(new Date());
+//        student.setBalanceFuzhuang(fuzhuang);
+//        investRecord.setImburseType(imburseType);
+//        investRecord.setBalanceFuzhuang(fuzhuang);
+//        try{
+////            studentDao
+//            studentDao.resetBalance(student,imburseType);
+//            recordsDao.insertInvestRecord(investRecord);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            logger.error("重置服装币出错,错误信息为："+e.getMessage());
+//            throw new RuntimeException(e.getMessage());
+//        }
+//        logger.info("重置服装币，重置金额为："+fuzhuang+"，资助类型为："+imburseType);
+//    }
 
 
 

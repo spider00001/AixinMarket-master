@@ -79,25 +79,22 @@ public class AdminController {
             map.put("code",2001);
             map.put("msg","空数据");
             return map;
-        }
-        try{
-            if (fuzhuang==null){
-                userService.chargeRiyong(riyong,imburseType);
-            }else {
-                if (riyong==null){
-                    userService.chargeFuzhuang(fuzhuang,imburseType);
-                }else {
-                    userService.chargeRiyong(riyong,imburseType);
+        } else {
+            try{
+                if (fuzhuang > 0){
                     userService.chargeFuzhuang(fuzhuang,imburseType);
                 }
+                if (riyong > 0) {
+                    userService.chargeRiyong(riyong,imburseType);
+                }
+                map.put("code",0);
+                map.put("msg","充值成功");
+                return map;
+            }catch (Exception e){
+                map.put("code",2004);
+                map.put("msg","充值出错");
+                return map;
             }
-            map.put("code",0);
-            map.put("msg","充值成功");
-            return map;
-        }catch (Exception e){
-            map.put("code",2004);
-            map.put("msg","充值出错");
-            return map;
         }
     }
 

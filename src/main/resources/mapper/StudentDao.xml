@@ -30,25 +30,25 @@
     </update>
     <update id="updateBalance">
         UPDATE aixin_student,
-               info_student
+            info_student
         <set>
-            <if test="student.balanceRiyong != null">aixin_student.balance_riyong = #{student.balanceRiyong},</if>
-            <if test="student.balanceFuzhuang != null">aixin_student.balance_fuzhuang = aixin_student.balance_fuzhuang + #{student.balanceFuzhuang},</if>
+            <if test="student.balanceRiyong >0">aixin_student.balance_riyong = #{student.balanceRiyong}</if>
+            <if test="student.balanceFuzhuang >0">aixin_student.balance_fuzhuang = #{student.balanceFuzhuang}</if>
         </set>
-        WHERE aixin_student.info_student_id = info_student.id
-        and info_student.imburseType = #{imburseType}
+        WHERE info_student.imburseType = #{imburseType}
+        and aixin_student.info_student_id = info_student.id
     </update>
 
-    <update id="resetBalance">
-        UPDATE aixin_student,
-        info_student
-        <set>
-            <if test="student.balanceRiyong != null">aixin_student.balance_riyong = #{student.balanceRiyong},</if>
-            <if test="student.balanceFuzhuang != null">aixin_student.balance_fuzhuang = #{student.balanceFuzhuang},</if>
-        </set>
-        WHERE aixin_student.info_student_id = info_student.id
-        and info_student.imburseType = #{imburseType}
-    </update>
+<!--    <update id="resetBalance">-->
+<!--        UPDATE aixin_student,-->
+<!--        info_student-->
+<!--        <set>-->
+<!--            <if test="student.balanceRiyong != null">aixin_student.balance_riyong = #{student.balanceRiyong},</if>-->
+<!--            <if test="student.balanceFuzhuang != null">aixin_student.balance_fuzhuang = #{student.balanceFuzhuang},</if>-->
+<!--        </set>-->
+<!--        WHERE aixin_student.info_student_id = info_student.id-->
+<!--        and info_student.imburseType = #{imburseType}-->
+<!--    </update>-->
 
     <select id="getStudentByPassword" resultMap="studentMap">
         SELECT  student.id,

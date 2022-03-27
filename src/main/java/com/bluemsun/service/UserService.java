@@ -27,13 +27,13 @@ public interface UserService {
     //获取全部学生数量
     public int getStudentCount(StudentType studentType);
     //每月更新日用币
-    public void updateBalanceRiyong();
-    //每学期更新服装币
-    public void updateBalanceFuzhuang();
+//    public void updateBalanceRiyong();
+//    //每学期更新服装币
+//    public void updateBalanceFuzhuang();
     //充值服装币
     public void chargeFuzhuang(float fuzhuang,int imburseType);
     //充值日用币
     public void chargeRiyong(float Riyong,int imburseType);
-    //重置服装币
-    public void resetFuzhuang(float fuzhuang,int imburseType);
+//    //重置服装币
+//    public void resetFuzhuang(float fuzhuang,int imburseType);
 }
